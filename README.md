@@ -1,2 +1,3 @@
 # playground
 A playground for quick testing of ideas of any kind with any tech.
+Most of these are configured to work on my own platform and might therefore require certain platform configuration. I use github so that the history of changes in these ideas are persisted and that they can be accessible anywhere. Another reason is the possibility of collaboration on these ideas with other fellow programmers. You are likely to find basically anything here.
