@@ -1,0 +1,39 @@
+{
+    // See https://go.microsoft.com//fwlink//?linkid=834763 for more information about this file.
+    "configurations": [
+        {
+            "name": "x64-Debug",
+            "generator": "Visual Studio 14 2015",
+            "configurationType": "Debug",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
+            "variables": [
+                {
+                    "name": "SM_PLANNING_TOOL_DIR",
+                    "value": "C:/src/planning_program_win/"
+                }
+            ],
+            "buildRoot": "C:\\build\\playground-msvc15-x64",
+            "installRoot": "C:\\build\\playground-msvc15-x64\\install",
+            "cmakeCommandArgs": "-T v140,host=x64 -A x64",
+            "buildCommandArgs": "-m:8 -v:normal",
+            "ctestCommandArgs": "-C Debug -VV -j"
+        },
+        {
+            "name": "x64-Release",
+            "generator": "Visual Studio 14 2015",
+            "configurationType": "Release",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
+            "variables": [
+                {
+                    "name": "SM_PLANNING_TOOL_DIR",
+                    "value": "C:/src/planning_program_win/"
+                }
+            ],
+            "buildRoot": "C:\\build\\playground-msvc15-x64-rls",
+            "installRoot": "C:\\build\\playground-msvc15-x64-rls\\install",
+            "cmakeCommandArgs": "-T v140,host=x64 -A x64",
+            "buildCommandArgs": "-m:8 -v:normal",
+            "ctestCommandArgs": "-C Release -VV -j"
+        }
+    ]
+}
