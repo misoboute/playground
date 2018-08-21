@@ -34,3 +34,6 @@
 # Visual Studio 2017
 .vs/
 CMakeSettings.json
+
+macOS user local scripts
+gen-macos-user.sh
