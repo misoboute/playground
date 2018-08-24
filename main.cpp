@@ -57,16 +57,6 @@ vtkSmartPointer<vtkRenderWindow> AddProps()
     renderWindow->AddRenderer(renderer);
     
     return renderWindow;
-
-    // The render window interactor captures mouse events
-    // and will perform appropriate camera or actor manipulation
-    // depending on the nature of the events.
-    vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
-        vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    renderWindowInteractor->SetRenderWindow(renderWindow);
-
-    // This starts the event loop and as a side effect causes an initial render.
-    renderWindowInteractor->Start();
 }
 
 int main(int argc, char** argv)
