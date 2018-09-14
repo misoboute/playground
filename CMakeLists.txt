@@ -11,7 +11,7 @@ include(SwissMedaUtil)
 set(CMAKE_PREFIX_PATH 
     ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/smopapp ${CMAKE_PREFIX_PATH})
 
-sm_find_or_get(VTK 8.1 EXTRA_PREFIX smopapp REQUIRED)
+sm_find_or_get(VTK 8.1 REQUIRED)
 
 include(${VTK_USE_FILE})
 
