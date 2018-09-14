@@ -8,15 +8,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${SM_PLANNING_TOOL_DIR}/src/cmake)
 
 include(SwissMedaUtil)
 
-sm_find_or_get(HDF5 
-    PATH_SUFFIXES hdf5 
-    INLCUDE_DIR_VERIF_TARGET hdf5::hdf5-static
-)
+set(CMAKE_PREFIX_PATH 
+    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/smopapp ${CMAKE_PREFIX_PATH})
 
-# sm_find_or_get(HDF5 NO_MODULE)
+sm_find_or_get(VTK 8.1 EXTRA_PREFIX smopapp REQUIRED)
+
+include(${VTK_USE_FILE})
 
 include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
+include_directories(${VTK_INCLUDE_DIRS})
 
 set(SOURCES main.cpp)
 
-add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME} ${VTK_LIBRARIES})
