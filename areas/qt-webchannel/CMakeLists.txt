@@ -3,7 +3,9 @@ list(APPEND CMAKE_PREFIX_PATH
     ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/smopapp/Qt5.11.1/msvc2017_64
 )
 sm_find_or_get(Qt5
-    COMPONENTS WebEngineWidgets VERIF_TARGET Qt5::WebEngineWidgets REQUIRED)
+    COMPONENTS WebChannel WebEngineWidgets 
+    VERIF_TARGET Qt5::WebEngineWidgets REQUIRED
+)
 
 include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
 

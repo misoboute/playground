@@ -2,10 +2,15 @@
 
 #include <QApplication>
 #include <QBoxLayout>
+#include <QFile>
+#include <QWebChannel>
 #include <QWebEnginePage>
+#include <QWebEngineScript>
+#include <QWebEngineScriptCollection>
 #include <QWebEngineView>
 #include <QWidget>
 
+#define SM_DEBUG_FILE_LINENUM // Should it output filename and line number
 #include "SMDebug.h"
 
 int main(int argc, char ** argv)
@@ -19,6 +24,13 @@ int main(int argc, char ** argv)
     mainWidgetLayout->addWidget(webView, 1);
     mainWidget.showMaximized();
     auto webPage = webView->page();
+    QFile webChannelScriptSourceFile(":/qtwebchannel/qwebchannel.js");
+    if (!webChannelScriptSourceFile.open(QIODevice::ReadOnly))
+        SMQDBG << "Couldn't load Qt's QWebChannel API!";
+    auto webChannelScriptSource =
+        QString::fromUtf8(webChannelScriptSourceFile.readAll());
+    auto outputScriptResult = [](const QVariant &v) { SMQDW1(v); };
+    webPage->runJavaScript(webChannelScriptSource, outputScriptResult);
     auto scriptSource = R"(
 options =
 {
@@ -35,7 +47,7 @@ options =
 };
 options;
         )";
-    webPage->runJavaScript(scriptSource, [](const QVariant &v) { SMQDW1(v); });
+    webPage->runJavaScript(scriptSource, outputScriptResult);
     // Yields:
     /*
         v  =
