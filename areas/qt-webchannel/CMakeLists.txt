@@ -14,3 +14,5 @@ set(SOURCES
 add_executable(qt-webchannel ${SOURCES})
 
 target_link_libraries(qt-webchannel Qt5::WebEngineWidgets)
+
+sm_deployqt(qt-webchannel)
