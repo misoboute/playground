@@ -3,18 +3,22 @@
     "configurations": [
         {
             "name": "x64-Debug",
-            "generator": "Visual Studio 14 2015",
+            "generator": "Visual Studio 15 2017",
             "configurationType": "Debug",
             "inheritEnvironments": [ "msvc_x64_x64" ],
             "variables": [
                 {
                     "name": "SM_PLANNING_TOOL_DIR",
                     "value": "C:/src/planning_program_win/"
+                },
+                {
+                    "name": "SM_BUILD_QT_WEBCHANNEL",
+                    "value": "ON"
                 }
             ],
-            "buildRoot": "C:\\build\\playground-msvc15-x64",
-            "installRoot": "C:\\build\\playground-msvc15-x64\\install",
-            "cmakeCommandArgs": "-T v140,host=x64 -A x64",
+            "buildRoot": "C:\\build\\playground-msvc141-x64",
+            "installRoot": "C:\\build\\playground-msvc141-x64\\install",
+            "cmakeCommandArgs": "-T v141,host=x64 -A x64",
             "buildCommandArgs": "-m:8 -v:normal",
             "ctestCommandArgs": "-C Debug -VV -j"
         },
@@ -27,10 +31,14 @@
                 {
                     "name": "SM_PLANNING_TOOL_DIR",
                     "value": "C:/src/planning_program_win/"
+                },
+                {
+                    "name": "SM_BUILD_QT_WEBCHANNEL",
+                    "value": "ON"
                 }
             ],
-            "buildRoot": "C:\\build\\playground-msvc15-x64-rls",
-            "installRoot": "C:\\build\\playground-msvc15-x64-rls\\install",
+            "buildRoot": "C:\\build\\playground-msvc141-x64-rls",
+            "installRoot": "C:\\build\\playground-msvc141-x64-rls\\install",
             "cmakeCommandArgs": "-T v140,host=x64 -A x64",
             "buildCommandArgs": "-m:8 -v:normal",
             "ctestCommandArgs": "-C Release -VV -j"

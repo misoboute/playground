@@ -18,8 +18,10 @@ set(SM_ALL_AREAS
 
 foreach (_area ${SM_ALL_AREAS})
     set(_area_opt_name SM_BUILD_${_area})
+    string(MAKE_C_IDENTIFIER ${_area_opt_name} _area_opt_name)
+    string(TOUPPER ${_area_opt_name} _area_opt_name)
     option(${_area_opt_name} 
-        "Generate the ${_area} sub-area of the playground" ON)
+        "Generate the ${_area} sub-area of the playground" OFF)
     if (${_area_opt_name})
         add_subdirectory(areas/${_area})
     endif (${_area_opt_name})

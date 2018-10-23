@@ -35,5 +35,5 @@
 .vs/
 CMakeSettings.json
 
-macOS user local scripts
+# macOS user local scripts
 gen-macos-user.sh
