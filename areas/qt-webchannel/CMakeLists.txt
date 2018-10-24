@@ -1,6 +1,5 @@
 list(APPEND CMAKE_PREFIX_PATH 
-    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/smopapp
-    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/smopapp/Qt5.11.1/msvc2017_64
+    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64
 )
 sm_find_or_get(Qt5
     COMPONENTS WebChannel WebEngineWidgets 

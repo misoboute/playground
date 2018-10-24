@@ -14,6 +14,7 @@ endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
     qt-webchannel
+    qt5-webchannel-example
 )
 
 foreach (_area ${SM_ALL_AREAS})
