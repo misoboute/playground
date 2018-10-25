@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QFile>
+#include <QJsonObject>
 #include <QWebChannel>
 #include <QWebEnginePage>
 #include <QWebEngineScript>
@@ -10,6 +11,7 @@
 #include <QWebEngineView>
 #include <QWidget>
 
+#include "Cases.h"
 #define SM_DEBUG_FILE_LINENUM // Should it output filename and line number
 #include "SMDebug.h"
 
@@ -29,8 +31,11 @@ int main(int argc, char ** argv)
         SMQDBG << "Couldn't load Qt's QWebChannel API!";
     auto webChannelScriptSource =
         QString::fromUtf8(webChannelScriptSourceFile.readAll());
-    auto outputScriptResult = [](const QVariant &v) { SMQDW1(v); };
-    webPage->runJavaScript(webChannelScriptSource, outputScriptResult);
+    webPage->runJavaScript(webChannelScriptSource);
+    auto channel = new QWebChannel(webPage);
+    webPage->setWebChannel(channel);
+    Cases casesObj;
+    channel->registerObject("cases", &casesObj);
     auto scriptSource = R"(
 options =
 {
@@ -45,9 +50,14 @@ options =
     objects: [],    // list of object in case (for filtering the reulsts) (defaults: all)
     status: [1,2,3]    // array of status for filtering the results (defaults: all)    
 };
-options;
-        )";
-    webPage->runJavaScript(scriptSource, outputScriptResult);
+channel = new QWebChannel(qt.webChannelTransport, function(channel) {
+    window.cases = channel.objects.cases;
+    cases.get(options, function(returnValue) {
+        alert(returnValue.hello);
+    });
+});
+)";
+    webPage->runJavaScript(scriptSource, [](const QVariant &v) { SMQDW1(v); });
     // Yields:
     /*
         v  =
