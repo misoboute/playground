@@ -12,6 +12,7 @@
 #include <QWidget>
 
 #include "Cases.h"
+#include "SmopIface.h"
 #define SM_DEBUG_FILE_LINENUM // Should it output filename and line number
 #include "SMDebug.h"
 
@@ -22,7 +23,6 @@ int main(int argc, char ** argv)
     auto mainWidgetLayout = new QVBoxLayout(&mainWidget);
     mainWidget.setLayout(mainWidgetLayout);
     auto webView = new QWebEngineView(&mainWidget);
-    webView->setUrl(QUrl("https://www.google.com"));
     mainWidgetLayout->addWidget(webView, 1);
     mainWidget.showMaximized();
     auto webPage = webView->page();
@@ -31,33 +31,22 @@ int main(int argc, char ** argv)
         SMQDBG << "Couldn't load Qt's QWebChannel API!";
     auto webChannelScriptSource =
         QString::fromUtf8(webChannelScriptSourceFile.readAll());
-    webPage->runJavaScript(webChannelScriptSource);
+    QWebEngineScript webChannelScript;
+    webChannelScript.setSourceCode(webChannelScriptSource);
+    webChannelScript.setInjectionPoint(QWebEngineScript::DocumentCreation);
+    webChannelScript.setWorldId(QWebEngineScript::MainWorld);
+    webPage->scripts().insert(webChannelScript);
+    webPage->runJavaScript(
+        webChannelScriptSource, [](const QVariant& v) { SMQDW1(v); });
     auto channel = new QWebChannel(webPage);
     webPage->setWebChannel(channel);
     Cases casesObj;
-    channel->registerObject("cases", &casesObj);
-    auto scriptSource = R"(
-options =
-{
-    page: 1, // number indicating page to return
-    pageSize: 10,    // number of cases in each page
-    sort: ['-lastModified', 'creationDate'],    // array of sort criteria (- means descending)
-    startDate:    234234234,    // timestamps of lastModified date. . results should have lastmodified date after this value (inclusive)
-    endDate:    32245454,    // timestamp of lastmodified. results should have lastmodified date before this value (exclusive)
-    search: '', // string to filter results (deault: undefined)
-    owner: ['me', 'others', 'nameOrId'],    // array of owners for filtering results. could be me, others or name or id of owner(s) (defaults: me , others)
-    jaw: 'upper',    // jaw of filtering the results. could be upper, lower or both (defaults: all)
-    objects: [],    // list of object in case (for filtering the reulsts) (defaults: all)
-    status: [1,2,3]    // array of status for filtering the results (defaults: all)    
-};
-channel = new QWebChannel(qt.webChannelTransport, function(channel) {
-    window.cases = channel.objects.cases;
-    cases.get(options, function(returnValue) {
-        alert(returnValue.hello);
-    });
-});
-)";
-    webPage->runJavaScript(scriptSource, [](const QVariant &v) { SMQDW1(v); });
+    SmopIface smopIfaceObj;
+
+    channel->registerObject(QStringLiteral("Cases"), &casesObj);
+    channel->registerObject(QStringLiteral("SmopIface"), &smopIfaceObj);
+
+    webView->setUrl(QUrl::fromLocalFile(INDEX_HTML_PATH));
     // Yields:
     /*
         v  =
@@ -76,5 +65,20 @@ channel = new QWebChannel(qt.webChannelTransport, function(channel) {
             )
         )
     */
+    // Expects as result:
+    /*
+    {
+        meta: {
+            count: 155    // total number of cases (after applying the filters)
+        },
+        data: [
+            {caseId: 3232, ...},
+            {caseId: 5345, ...},
+            ...
+        ]
+    }
+    */
+    // Setting security token:
+    // SmopInterface.Info({token: string, userId: 4234, ...})
     return app.exec();
 }

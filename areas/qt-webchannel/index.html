@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>smartscannerui</title>
+  </head>
+  <body>
+<script>
+new QWebChannel(qt.webChannelTransport, function (channel) {
+  window.Cases = channel.objects.Cases
+  window.SmopIface = channel.objects.SmopIface
+})
+
+</script>
+
+
+    <div style="display:flex">
+        <textarea id="options" rows="15" cols="40" placeholder='options parameters like {"page":1, "pagesize":10}'></textarea>
+        <button onClick="getCases()">Cases.get()</button>
+        <textarea readonly id="caseResults" rows="15" cols="40" placeholder="results show here"></textarea>	
+    </div>
+    <div id="CaseErr"></div>
+
+    <div style="display:flex">
+        <textarea id="info" rows="15" cols="40" placeholder='info like {"token":"asdasd244234", "userId":32}'></textarea>
+        <button onClick="passInfo()">SmopIface.info()</button>
+        <textarea readonly id="infoResults" rows="15" cols="40" placeholder="results show here"></textarea>	
+    </div>
+    <div id="infoErr"></div>
+    
+  </body>
+  
+<script>
+function getCases() {
+    try {
+        let optStr = document.getElementById('options').value
+        let optObj =  JSON.parse(optStr);
+        console.log('options', optObj)
+        Cases.get(optObj, ret => {
+            console.log('return', ret)
+            let retStr = JSON.stringify(ret, null, 2);
+            document.getElementById('caseResults').value = retStr
+        })
+    }catch(e) {
+        document.getElementById('CaseErr').innerHTML = e.message
+    }
+    
+}
+
+function passInfo() {
+    try {
+        let optStr = document.getElementById('info').value
+        let optObj =  JSON.parse(optStr);
+        console.log('info', optObj)
+        SmopIface.info(optObj, ret => {
+            console.log('return', ret)
+            let retStr = JSON.stringify(ret, null, 2);
+            document.getElementById('infoResults').value = retStr
+        })
+    }catch(e) {
+        document.getElementById('infoErr').innerHTML = e.message
+    }
+    
+}
+</script>
+</html>

@@ -5,19 +5,19 @@
 #define SM_DEBUG_FILE_LINENUM // Should it output filename and line number
 #include "SMDebug.h"
 
-class Cases : public QObject
+class SmopIface : public QObject
 {
     Q_OBJECT
 public:
-    Cases(QObject * parent = nullptr)
+    SmopIface(QObject * parent = nullptr)
         : QObject(parent)
     {
     }
 
 public slots:
-    QJsonObject get(const QJsonObject& options)
+    QJsonObject info(const QJsonObject& info)
     {
-        SMQDW1(options);
-        return { { "Hello", "World" } };
+        SMQDW1(info);
+        return { { "Goodbye", "World" } };
     }
 };

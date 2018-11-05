@@ -10,8 +10,11 @@ sm_find_or_get(Qt5
 
 include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
 
+add_definitions(-DINDEX_HTML_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/index.html\")
+
 set(SOURCES 
     Cases.cpp
+    SmopIface.cpp
     main.cpp
 )
 
