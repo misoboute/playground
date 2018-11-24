@@ -13,7 +13,8 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
-    challenge/tomtom
+    challenge/tomtom-1
+    challenge/tomtom-3
     qt-webchannel
     qt5-webchannel-example
 )

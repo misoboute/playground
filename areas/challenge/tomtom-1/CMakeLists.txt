@@ -12,9 +12,9 @@ set(SOURCES
     main.cpp
 )
 
-add_executable(challenge_tomtom ${SOURCES})
+add_executable(challenge_tomtom1 ${SOURCES})
 
-target_link_libraries(challenge_tomtom
+target_link_libraries(challenge_tomtom1
     Threads::Threads
     ${GTEST_BOTH_LIBRARIES}
 )
