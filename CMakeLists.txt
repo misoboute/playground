@@ -13,6 +13,7 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
+    challenge/tomtom
     qt-webchannel
     qt5-webchannel-example
 )
