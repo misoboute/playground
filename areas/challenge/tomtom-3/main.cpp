@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <algorithm>
+#include <chrono>
 #include <limits>
 
 #include <gtest/gtest.h>
@@ -8,13 +9,13 @@
 using testing::Test;
 
 const auto maxInt = std::numeric_limits<int>::max();
-size_t called = 0;
+size_t called = 0, calledM = 0;
 
 int minChanges(const std::vector<int>& map, int curSeg, int curLane)
 {
-    ++called;
-    if (called % 10000000 == 0)
-        std::cout << "called " << called << "times" << std::endl;
+    if (++called == 1000000)
+        calledM++, called = 0;
+
     if (curSeg >= map.size())
         return 0;
     if (map[curSeg] & (1 << curLane))
@@ -47,11 +48,35 @@ struct TomTomFixture : public Test
 {
     TomTomFixture()
     {
+        called = calledM = 0;
+        started_ = std::chrono::steady_clock::now();
     }
 
     ~TomTomFixture()
     {
+        auto took = std::chrono::steady_clock::now() - started_;
+        //std::cout << "Took " <<
+        //    std::chrono::duration_cast<std::chrono::milliseconds>(took).count() 
+        //    << "ms and called minChanges " << calledM << " million times." << 
+        //    std::endl;
     }
+
+    std::vector<int> CreateCheckeredMap(int length)
+    {
+        // 01010101
+        // 10101010
+        // 01010101
+        // 10101010
+        // 01010101
+        // 10101010
+        // ...
+        std::vector<int> map(length);
+        for (auto i = 0; i < map.size(); ++i)
+            map[i] = 0x55 << (i % 2);
+        return map;
+    }
+
+    std::chrono::steady_clock::time_point started_;
 };
 
 TEST_F(TomTomFixture, T1)
@@ -91,21 +116,21 @@ TEST_F(TomTomFixture, T7)
 
 TEST_F(TomTomFixture, T8)
 {
-    // 00000001 0
-    // 00000010 1
-    // 00000100 2 
-    // 00001000 3
-    // 00010000 4
-    // 00100000 5 
-    // 01000000 6 
-    // 10000000 7
-    // 01000000 8
-    // 00100000 9
-    // 00010000 10
-    // 00001000 11
-    // 00000100 12
-    // 00000010 13
-    // 00000001 14
+    // 00000001
+    // 00000010
+    // 00000100
+    // 00001000
+    // 00010000
+    // 00100000
+    // 01000000
+    // 10000000
+    // 01000000
+    // 00100000
+    // 00010000
+    // 00001000
+    // 00000100
+    // 00000010
+    // 00000001
     // 00000010
     // 00000100
     // 00001000
@@ -120,18 +145,33 @@ TEST_F(TomTomFixture, T8)
 
 }
 
-TEST_F(TomTomFixture, T9)
-{
-    // 01010101
-    // 10101010
-    // 01010101
-    // 10101010
-    // 01010101
-    // 10101010
-    // ...
-    // Fails performance test! Takes forever!
-    std::vector<int> map(200);
-    for (auto i = 0; i < map.size(); ++i)
-        map[i] = 0x55 << (i % 2);
-    EXPECT_EQ(solution(map), 199);
-}
+#define TEST_CHECKERED_MAP(LENGTH) \
+TEST_F(TomTomFixture, Checkered_##LENGTH) \
+{ \
+    EXPECT_EQ(solution(CreateCheckeredMap(LENGTH)), LENGTH - 1); \
+} 
+
+TEST_CHECKERED_MAP(10)  // (1 ms)
+TEST_CHECKERED_MAP(11)  // (1 ms)
+TEST_CHECKERED_MAP(12)  // (1 ms)
+TEST_CHECKERED_MAP(13)  // (3 ms)
+TEST_CHECKERED_MAP(14)  // (6 ms)
+TEST_CHECKERED_MAP(15)  // (11 ms)
+TEST_CHECKERED_MAP(16)  // (22 ms)
+TEST_CHECKERED_MAP(17)  // (39 ms)
+TEST_CHECKERED_MAP(18)  // (75 ms)
+TEST_CHECKERED_MAP(19)  // (160 ms)
+TEST_CHECKERED_MAP(20)  // (270 ms)
+TEST_CHECKERED_MAP(21)  // (484 ms)
+TEST_CHECKERED_MAP(22)  // (850 ms)
+TEST_CHECKERED_MAP(23)  // (1595 ms)
+TEST_CHECKERED_MAP(24)  // (2957 ms)
+TEST_CHECKERED_MAP(25)  // (5577 ms)
+TEST_CHECKERED_MAP(26)  // (10459 ms)
+TEST_CHECKERED_MAP(27)  // (19869 ms)
+TEST_CHECKERED_MAP(28)  // (37374 ms)
+TEST_CHECKERED_MAP(29)  // (70691 ms)
+TEST_CHECKERED_MAP(30)  // (131839 ms)
+
+// The worst case complexity (a fully checkered road) is exponential w.r.t
+// road length.
