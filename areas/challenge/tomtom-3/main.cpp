@@ -11,6 +11,11 @@ using testing::Test;
 const auto maxInt = std::numeric_limits<int>::max();
 size_t called = 0, calledM = 0;
 
+inline bool laneExists(const std::vector<int>& map, int seg, int lane)
+{
+    return map[seg] & (1 << lane);
+}
+
 int minChanges(const std::vector<int>& map, int curSeg, int curLane)
 {
     if (++called == 1000000)
@@ -18,29 +23,68 @@ int minChanges(const std::vector<int>& map, int curSeg, int curLane)
 
     if (curSeg >= map.size())
         return 0;
-    if (map[curSeg] & (1 << curLane))
-        return minChanges(map, curSeg + 1, curLane);
-    auto minChangesLeft = maxInt, minChangesRight = maxInt;
-    if (curLane > 0 && map[curSeg] & (1 << (curLane - 1)))
-        minChangesLeft = minChanges(map, curSeg + 1, curLane - 1);
-    if (curLane < 7 && map[curSeg] & (1 << (curLane + 1)))
-        minChangesRight = minChanges(map, curSeg + 1, curLane + 1);
-    if (minChangesLeft == minChangesRight && minChangesLeft == maxInt)
-        return maxInt;
-    return std::min(minChangesLeft, minChangesRight) + 1;
-}
 
-int solution(const std::vector<int>& map)
+    auto straight = laneExists(map, curSeg, curLane) ?
+        minChanges(map, curSeg + 1, curLane) : maxInt;
+    if (curSeg == 0)
+        return straight;
+
+    auto left = curLane > 0 && laneExists(map, curSeg, curLane - 1) ?
+        minChanges(map, curSeg + 1, curLane - 1) : maxInt;
+    auto right = curLane < 7 && laneExists(map, curSeg, curLane + 1) ?
+        minChanges(map, curSeg + 1, curLane + 1) : maxInt;
+
+    if (left == right && right == maxInt)
+        return straight;
+
+    return std::min(std::min(left, right) + 1, straight);
+}
+// The recursive solution, although correct (and maybe more intuitive), is 
+// of exponential complexity w.r.t map.size(). 
+int solutionRecursive(const std::vector<int>& map)
 {
     auto changes = std::vector<int>(8, maxInt);
     for (int i = 0; i < 8; i++)
     {
         if (map[0] & (1 << i))
-
             changes[i] = minChanges(map, 0, i);
-
     }
     auto minChanges = *std::min_element(changes.cbegin(), changes.cend());
+    return minChanges == maxInt ? -1 : minChanges;
+}
+
+// The iterative solution is of O(n) w.r.t map.size()
+int solution(const std::vector<int>& map)
+{
+    if (map.empty())
+        return 0;
+
+    std::vector< std::vector<int> > blackboard(
+        2, std::vector<int>(8, 0));
+    const auto maxInt = std::numeric_limits<int>::max();
+    for (auto i = 0; i < map.size(); ++i)
+    {
+        auto& currentRow = blackboard[i % 2], prevRow = blackboard[(i + 1) % 2];
+        for (auto j = 0; j < 8; ++j)
+        {
+            if (laneExists(map, i, j))
+            {
+                if (i == 0)
+                    continue;
+
+                auto straight = prevRow[j];
+                auto left = j > 0 ? prevRow[j - 1] : maxInt;
+                auto right = j < 7 ? prevRow[j + 1] : maxInt;
+                if (left == maxInt) left--;
+                if (right == maxInt) right--;
+                currentRow[j] = std::min({ left + 1, right + 1, straight });
+            }
+            else
+                currentRow[j] = maxInt;
+        }
+    }
+    const auto& lastRow = blackboard[(map.size() - 1) % 2];
+    auto minChanges = *std::min_element(lastRow.cbegin(), lastRow.cend());
     return minChanges == maxInt ? -1 : minChanges;
 }
 
@@ -76,12 +120,39 @@ struct TomTomFixture : public Test
         return map;
     }
 
+    template <typename ListT>
+    std::string listToStr(const ListT& list)
+    {
+        std::ostringstream str;
+        auto itr = list.cbegin();
+        str << "{ " << *itr++;
+        while (itr != list.cend())
+            str << ", " << *itr++;
+        str << " };";
+        return str.str();
+    }
+
+    std::string roadToStr(const std::vector<int>& road)
+    {
+        std::ostringstream str;
+        for (auto j = 0; j < road.size(); ++j)
+        {
+            for (auto i = 0; i < 8; ++i)
+                str << ((road[j] & (1 << i)) ? "#" : " ");
+            str << "  :  " << road[j] << "  \t" << j << std::endl;
+        }
+        return str.str();
+    }
+
+
     std::chrono::steady_clock::time_point started_;
 };
 
 TEST_F(TomTomFixture, T1)
 {
-    EXPECT_EQ(solution({ 7, 11, 10, 4 }), 1);
+    std::vector<int> map{ 7, 11, 10, 4 };
+    std::cout << "map = " << listToStr(map) << std::endl << roadToStr(map);
+    EXPECT_EQ(solution(std::move(map)), 1);
 }
 
 TEST_F(TomTomFixture, T2)
@@ -151,27 +222,40 @@ TEST_F(TomTomFixture, Checkered_##LENGTH) \
     EXPECT_EQ(solution(CreateCheckeredMap(LENGTH)), LENGTH - 1); \
 } 
 
-TEST_CHECKERED_MAP(10)  // (1 ms)
-TEST_CHECKERED_MAP(11)  // (1 ms)
-TEST_CHECKERED_MAP(12)  // (1 ms)
-TEST_CHECKERED_MAP(13)  // (3 ms)
-TEST_CHECKERED_MAP(14)  // (6 ms)
-TEST_CHECKERED_MAP(15)  // (11 ms)
-TEST_CHECKERED_MAP(16)  // (22 ms)
-TEST_CHECKERED_MAP(17)  // (39 ms)
-TEST_CHECKERED_MAP(18)  // (75 ms)
-TEST_CHECKERED_MAP(19)  // (160 ms)
-TEST_CHECKERED_MAP(20)  // (270 ms)
-TEST_CHECKERED_MAP(21)  // (484 ms)
-TEST_CHECKERED_MAP(22)  // (850 ms)
-TEST_CHECKERED_MAP(23)  // (1595 ms)
-TEST_CHECKERED_MAP(24)  // (2957 ms)
-TEST_CHECKERED_MAP(25)  // (5577 ms)
-TEST_CHECKERED_MAP(26)  // (10459 ms)
-TEST_CHECKERED_MAP(27)  // (19869 ms)
-TEST_CHECKERED_MAP(28)  // (37374 ms)
-TEST_CHECKERED_MAP(29)  // (70691 ms)
-TEST_CHECKERED_MAP(30)  // (131839 ms)
+TEST_CHECKERED_MAP(10)  
+TEST_CHECKERED_MAP(11)  
+TEST_CHECKERED_MAP(12)  
+TEST_CHECKERED_MAP(13)  
+TEST_CHECKERED_MAP(14)  
+TEST_CHECKERED_MAP(15)  
+TEST_CHECKERED_MAP(16)  
+TEST_CHECKERED_MAP(17)  
+TEST_CHECKERED_MAP(18)  
+TEST_CHECKERED_MAP(19)  
+TEST_CHECKERED_MAP(20)  
+TEST_CHECKERED_MAP(21)  
+TEST_CHECKERED_MAP(22)  
+TEST_CHECKERED_MAP(23)  
+TEST_CHECKERED_MAP(24)  
+TEST_CHECKERED_MAP(25)  
+TEST_CHECKERED_MAP(26)  
+TEST_CHECKERED_MAP(27)  
+TEST_CHECKERED_MAP(28)  
+TEST_CHECKERED_MAP(29)  
+TEST_CHECKERED_MAP(30)  
+TEST_CHECKERED_MAP(1000)
 
-// The worst case complexity (a fully checkered road) is exponential w.r.t
-// road length.
+TEST_F(TomTomFixture, RandomRoad_10)
+{
+    std::vector<int> map{ 223, 123, 26, 178, 34, 231, 60, 119, 181, 191 };
+    std::cout << "map = " << listToStr(map) << std::endl << roadToStr(map);
+    EXPECT_EQ(solution(map), 1);
+}
+
+TEST_F(TomTomFixture, RandomRoad_58)
+{
+    std::vector<int> map{ 223, 123, 26, 178, 34, 231, 60, 119, 181, 191, 11, 36, 131, 36, 245, 38, 198, 196, 41, 206, 16, 178 , 80, 110, 171, 82, 20, 218, 47, 186, 100, 18, 24, 98, 205, 35, 169, 82, 92, 142, 65, 101, 17, 182, 232, 179, 179, 137, 110, 184, 69, 76, 186, 99, 170, 133, 6, 148, 4 };
+    std::cout << "map = " << listToStr(map) << std::endl << roadToStr(map);
+    EXPECT_EQ(solution(map), 25);
+}
+
