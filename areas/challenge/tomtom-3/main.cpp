@@ -1,7 +1,7 @@
-#include <iostream>
 
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 #include <limits>
 
 #include <gtest/gtest.h>
@@ -56,9 +56,6 @@ int solutionRecursive(const std::vector<int>& map)
 // The iterative solution is of O(n) w.r.t map.size()
 int solution(const std::vector<int>& map)
 {
-    if (map.empty())
-        return 0;
-
     std::vector< std::vector<int> > blackboard(
         2, std::vector<int>(8, 0));
     const auto maxInt = std::numeric_limits<int>::max();
@@ -257,5 +254,17 @@ TEST_F(TomTomFixture, RandomRoad_58)
     std::vector<int> map{ 223, 123, 26, 178, 34, 231, 60, 119, 181, 191, 11, 36, 131, 36, 245, 38, 198, 196, 41, 206, 16, 178 , 80, 110, 171, 82, 20, 218, 47, 186, 100, 18, 24, 98, 205, 35, 169, 82, 92, 142, 65, 101, 17, 182, 232, 179, 179, 137, 110, 184, 69, 76, 186, 99, 170, 133, 6, 148, 4 };
     std::cout << "map = " << listToStr(map) << std::endl << roadToStr(map);
     EXPECT_EQ(solution(map), 25);
+}
+
+TEST_F(TomTomFixture, T9)
+{
+    std::vector<int> map{ 1, 3, 5, 9, 17, 33, 65 };
+    for (int i = 0; i < 1000; i++)
+    {
+        map.push_back(129);
+        map.push_back(130);
+    }
+    std::cout << "map = " << listToStr(map) << std::endl << roadToStr(map);
+    EXPECT_EQ(solution(map), 7);
 }
 
