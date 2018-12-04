@@ -13,6 +13,8 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
+    challenge/hackerrank/bit-array
+    challenge/hackerrank/variadics
     challenge/tomtom-1
     challenge/tomtom-3
     qt-webchannel
