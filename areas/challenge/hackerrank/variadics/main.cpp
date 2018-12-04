@@ -48,20 +48,6 @@ struct CheckValues<0, digits...> {
     }
 };
 
-int solMain(std::istream& cin, std::ostream& cout)
-{
-    int t; cin >> t;
-
-    for (int i = 0; i != t; ++i) {
-        int x, y;
-        cin >> x >> y;
-        CheckValues<6>::check(x, y);
-        cout << "\n";
-    }
-
-    return 0;
-}
-
 struct CppVariadicFixture : public testing::Test
 {
     CppVariadicFixture()
@@ -85,12 +71,9 @@ TEST_F(CppVariadicFixture, T2)
     EXPECT_EQ(val, 6);
 }
 
-TEST_F(CppVariadicFixture, Sample)
+TEST_F(CppVariadicFixture, T3)
 {
-    std::istringstream cin("2\n65 1\n10 0");
-    std::ostringstream cout;
-    solMain(cin, cout);
-    EXPECT_EQ(cout.str(),
-        "0100000000000000000000000000000000000000000000000000000000000000\n"
-        "0000000000100000000000000000000000000000000000000000000000000000\n");
+    auto val = reversed_binary_value<false, true, true, false, false, true>();
+    EXPECT_EQ(val, 70);
 }
+
