@@ -13,6 +13,10 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
+    challenge/codility-demo
+    challenge/cybercom1
+    challenge/cybercom2
+    challenge/cybercom3
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
     challenge/tomtom-1
