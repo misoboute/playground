@@ -1,0 +1,14 @@
+{
+    "cmake.configureSettings": {
+        "CMAKE_OSX_SYSROOT": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.9",
+        "CMAKE_PREFIX_PATH": "/usr/local/swissmeda/Qt5.9.1",
+        "SM_BUILD_PEDASTEP": "ON",
+        "SM_PLANNING_TOOL_DIR": "~/src/planning_program_win"
+    },
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "unordered_map": "cpp",
+        "__locale": "cpp"
+    }
+}
