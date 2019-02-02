@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_CXX_STANDARD 14)
+# Required for nlohmann/json at least:
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 project(playground)
 
 set(SM_PLANNING_TOOL_DIR "" CACHE PATH
@@ -17,6 +21,7 @@ set(SM_ALL_AREAS
     challenge/hackerrank/variadics
     challenge/tomtom-1
     challenge/tomtom-3
+    pedastep
     qt-webchannel
     qt5-webchannel-example
 )
