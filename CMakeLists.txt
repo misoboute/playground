@@ -19,6 +19,9 @@ endif (SM_PLANNING_TOOL_DIR)
 set(SM_ALL_AREAS 
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
+    challenge/maven-1
+    challenge/maven-2
+    challenge/maven-3
     challenge/tomtom-1
     challenge/tomtom-3
     pedastep
