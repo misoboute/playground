@@ -17,6 +17,7 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
+    challenge/bmw-1
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
     challenge/maven-1
