@@ -69,7 +69,10 @@ QString Encrypt(QString clearText, QString rhyme,
         encrypted += encryptedLetter;
         encrypted += (++counter) % metreSize == 0 ? "\n" : ", ";
     }
-    encrypted.truncate(encrypted.size() - 2);
+    if (encrypted.endsWith(", "))
+    {
+        encrypted.truncate(encrypted.size() - 2);
+    }
     return encrypted;
 }
 
