@@ -29,6 +29,9 @@ set(SM_ALL_AREAS
     challenge/maven-3
     challenge/tomtom-1
     challenge/tomtom-3
+    challenge/tomtom-4
+    challenge/tomtom-5
+    challenge/tomtom-6
     pedastep
     qt-webchannel
     qt5-webchannel-example
