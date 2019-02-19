@@ -6,4 +6,4 @@ set(SOURCES
     Interview1.cpp
 )
 
-add_executable(challenge_bmw1 ${SOURCES})
+add_executable(concept_storyboard ${SOURCES})
