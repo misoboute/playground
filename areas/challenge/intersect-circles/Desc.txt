@@ -1,0 +1,6 @@
+Given two circles, one centered at (x1, y1) with the radius r1, and the other
+centered at (x2, y2) with the radius r2, calculate the area within the 
+intersection of the two circles. 
+
+double solution(
+    double x1, double y1, double r1, double x2, double y2, double r2)

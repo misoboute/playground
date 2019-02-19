@@ -24,6 +24,7 @@ set(SM_ALL_AREAS
     challenge/cybercom3
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
+    challenge/intersect-circles
     challenge/maven-1
     challenge/maven-2
     challenge/maven-3
