@@ -10,9 +10,9 @@ set(SOURCES
     main.cpp
 )
 
-add_executable(challenge_tomtom6 ${SOURCES})
+add_executable(single_swap_sort ${SOURCES})
 
-target_link_libraries(challenge_tomtom6
+target_link_libraries(single_swap_sort
     Threads::Threads
     ${GTEST_BOTH_LIBRARIES}
 )

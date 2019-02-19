@@ -17,6 +17,7 @@ if (SM_PLANNING_TOOL_DIR)
 endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
+    challenge/adjacent-coins
     challenge/bmw-1
     challenge/codility-demo
     challenge/cybercom1
@@ -28,11 +29,10 @@ set(SM_ALL_AREAS
     challenge/maven-1
     challenge/maven-2
     challenge/maven-3
+    challenge/single-swap-sort
     challenge/tomtom-1
     challenge/tomtom-3
     challenge/tomtom-4
-    challenge/tomtom-5
-    challenge/tomtom-6
     pedastep
     qt-webchannel
     qt5-webchannel-example
