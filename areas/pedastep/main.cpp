@@ -130,7 +130,6 @@ int main(int argc, char ** argv)
     auto rhyme = QString::fromUtf8(argv[3]);
     auto metre = ParseMeter(QString::fromUtf8(argv[4]));
     const auto alphabet = QString("ءابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی");
-    TestAlphabet(alphabet);
     auto encrypted = Encrypt(clearText, rhyme, metre, alphabet);
     output.write(encrypted.toUtf8());
     return 0;
