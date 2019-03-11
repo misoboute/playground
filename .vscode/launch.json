@@ -11,7 +11,7 @@
             "name": "Debug current CMake Tools target",
             "program": "${command:cmake.launchTargetPath}",
             "cwd": "${workspaceFolder}/build/areas/pedastep",
-            "args": ["Input.txt", "Output.csv", "ات چرا", "212211221122112" ],
+            "args": ["Input.txt", "Output.csv", "یزی دارد", "212211221122112" ],
             "setupCommands": [
                 // Enable breakpoint on C++ exception throw and catch. If this
                 // doesn't work try settings breakpoint on the native 
