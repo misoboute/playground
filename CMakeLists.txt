@@ -33,6 +33,7 @@ set(SM_ALL_AREAS
     challenge/tomtom-1
     challenge/tomtom-3
     challenge/tomtom-4
+    MoveCopyCtors
     pedastep
     qt-webchannel
     qt5-webchannel-example
