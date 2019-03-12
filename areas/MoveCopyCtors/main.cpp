@@ -1,6 +1,5 @@
 #include <iostream>
-#include <string>
-#include <vector>
+#include <utility>
 
 namespace my 
 {
@@ -182,7 +181,7 @@ public:
     F(int_uptr&& o)
     : o_(std::move(o))
     {
-        std::cout << "F: Pass unique_ptr by value then move" << std::endl;
+        std::cout << "F: Pass unique_ptr by rvalue ref then move" << std::endl;
     }
     
 private:
