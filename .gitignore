@@ -38,4 +38,5 @@ CMakeSettings.json
 # macOS user local scripts
 gen-macos-user.sh
 
+.vscode/ipch
 build
