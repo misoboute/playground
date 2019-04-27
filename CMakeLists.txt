@@ -18,6 +18,7 @@ endif (SM_PLANNING_TOOL_DIR)
 
 set(SM_ALL_AREAS 
     BenchmarkConsecutiveInserts
+    MarjanQML
     MoveCopyCtors
     challenge/adjacent-coins
     challenge/codility-demo

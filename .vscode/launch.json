@@ -10,7 +10,7 @@
             "MIMode": "lldb",
             "name": "Debug current CMake Tools target",
             "program": "${command:cmake.launchTargetPath}",
-            "cwd": "${workspaceFolder}/build/areas/pedastep",
+            "cwd": "${workspaceFolder}/build/areas/MarjanQML/Debug",
             "args": ["Input.txt", "Output.csv", "یزی نگرفت", "212211221122112" ],
             "setupCommands": [
                 // Enable breakpoint on C++ exception throw and catch. If this
