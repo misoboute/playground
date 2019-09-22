@@ -21,9 +21,10 @@ set(SM_ALL_AREAS
     MarjanQML
     MoveCopyCtors
     challenge/adjacent-coins
+    challenge/cafe-bazaar
     challenge/codility-demo
-    challenge/cybercom1
     challenge/concept-storyboard
+    challenge/cybercom1
     challenge/cybercom2
     challenge/cybercom3
     challenge/hackerrank/bit-array
