@@ -38,8 +38,6 @@ std::string InsertParens(
 
 struct CafeBazaarFixture : public Test
 {
-    using Vec = std::vector<int>;
-
     CafeBazaarFixture()
     {
     }
@@ -90,49 +88,3 @@ TEST_F(CafeBazaarFixture, T4)
     };
     EXPECT_EQ(InsertParens(str, parenPairs), "((H(ello, World))(!))");
 }
-
-// TEST_F(CafeBazaarFixture, T1)
-// {
-//     const auto str = "Hello, World!";
-//     const auto parensMap = std::map<size_t, std::string> {
-//         { 1, "(" },
-//         { 2, ")" },
-//         { 3, "(" },
-//         { 5, ")" }
-//     };
-//     EXPECT_EQ(InsertParens(str, parensMap), "H(e)l(lo), World!");
-// }
-
-// TEST_F(CafeBazaarFixture, T2)
-// {
-//     const auto str = "Hello, World!";
-//     const auto parensMap = std::map<size_t, std::string> {
-//         { 1, "(" },
-//         { 2, "(" },
-//         { 3, ")" },
-//         { 5, ")" }
-//     };
-//     EXPECT_EQ(InsertParens(str, parensMap), "H(e(l)lo), World!");
-// }
-
-// TEST_F(CafeBazaarFixture, T3)
-// {
-//     const auto str = "Hello, World!";
-//     const auto parensMap = std::map<size_t, std::string> {
-//         { 1, "((" },
-//         { 2, "))" }
-//     };
-//     EXPECT_EQ(InsertParens(str, parensMap), "H((e))llo, World!");
-// }
-
-// TEST_F(CafeBazaarFixture, T4)
-// {
-//     const auto str = "Hello, World!";
-//     const auto parensMap = std::map<size_t, std::string> {
-//         { 0, "((" },
-//         { 1, "(" },
-//         { 12, "))(" },
-//         { 13, "))" }
-//     };
-//     EXPECT_EQ(InsertParens(str, parensMap), "((H(ello, World))(!))");
-// }
