@@ -73,7 +73,14 @@
         "fstream": "cpp",
         "thread": "cpp",
         "hashtable": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "array": "cpp",
+        "clocale": "cpp",
+        "complex": "cpp",
+        "future": "cpp",
+        "*.tcc": "cpp",
+        "hash_map": "cpp",
+        "cinttypes": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }

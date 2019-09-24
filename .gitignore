@@ -40,3 +40,6 @@ gen-macos-user.sh
 
 .vscode/ipch
 build
+
+# OS
+.DS_Store
