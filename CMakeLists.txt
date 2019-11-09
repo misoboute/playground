@@ -22,6 +22,7 @@ set(SM_ALL_AREAS
     MoveCopyCtors
     challenge/adjacent-coins
     challenge/cafe-bazaar
+    challenge/cafe-bazaar-2
     challenge/codility-demo
     challenge/concept-storyboard
     challenge/cybercom1
