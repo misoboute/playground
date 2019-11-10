@@ -6,7 +6,7 @@ if(SM_RETRIEVE_WXWIDGETS_INCLUDED)
 endif(SM_RETRIEVE_WXWIDGETS_INCLUDED)
 set(SM_RETRIEVE_WXWIDGETS_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 sm_find_or_get(TIFF)
 sm_find_or_get(ZLIB)
@@ -19,7 +19,7 @@ set(WX_SOURCE_PKG_URL
 # It helps CMake verify the integrity of the file and not download it again.
 set(WX_SOURCE_PKG_SHA1 8d98975eb9f81036261c0643755b98e4bb5ab776)
 
-set(WX_SM_VENDOR "Swissmeda AG")
+set(WX_SM_VENDOR misoboute)
 
 # The latest stable release of wxWidgets at this time is 3.0.4 which lacks
 # a CMake generated build system. Building wxWidgets using CMake comes as a new
@@ -55,16 +55,16 @@ if(WIN32)
 
 elseif(APPLE)
     sm_clean_ext_proj_build_sys_files(
-        ${SWISSMEDA_3RDPARTY_BUILD_DIR}/wxwidgets wxwidgets)
+        ${SM_3RDPARTY_BUILD_DIR}/wxwidgets wxwidgets)
 
     ExternalProject_Add(
         wxwidgets
         URL ${WX_SOURCE_PKG_URL}
         URL_HASH SHA1=${WX_SOURCE_PKG_SHA1}
-        DOWNLOAD_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/wxwidgets
-        SOURCE_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/wxwidgets
-        BINARY_DIR ${SWISSMEDA_3RDPARTY_BUILD_DIR}/wxwidgets
-        INSTALL_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}
+        DOWNLOAD_DIR ${SM_DOWNLOAD_CACHE_DIR}/Download/wxwidgets
+        SOURCE_DIR ${SM_DOWNLOAD_CACHE_DIR}/Source/wxwidgets
+        BINARY_DIR ${SM_3RDPARTY_BUILD_DIR}/wxwidgets
+        INSTALL_DIR ${SM_3RDPARTY_INSTALL_DIR}
         CONFIGURE_COMMAND
             <SOURCE_DIR>/configure
                 --prefix=<INSTALL_DIR> --disable-shared
@@ -75,12 +75,12 @@ elseif(APPLE)
                 --with-expat --enable-xrc
     )
 
-    sm_clean_ext_proj_build_sys_files(${SWISSMEDA_3RDPARTY_BUILD_DIR}/wxrc wxrc)
+    sm_clean_ext_proj_build_sys_files(${SM_3RDPARTY_BUILD_DIR}/wxrc wxrc)
     ExternalProject_Add(
         wxrc
-        SOURCE_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/wxwidgets/utils/wxrc
-        BINARY_DIR ${SWISSMEDA_3RDPARTY_BUILD_DIR}/wxwidgets/utils/wxrc
-        INSTALL_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}
+        SOURCE_DIR ${SM_DOWNLOAD_CACHE_DIR}/Source/wxwidgets/utils/wxrc
+        BINARY_DIR ${SM_3RDPARTY_BUILD_DIR}/wxwidgets/utils/wxrc
+        INSTALL_DIR ${SM_3RDPARTY_INSTALL_DIR}
         DOWNLOAD_COMMAND ""
         CMAKE_CACHE_DEFAULT_ARGS
             -DCMAKE_INSTALL_PREFIX:STRING=<INSTALL_DIR>

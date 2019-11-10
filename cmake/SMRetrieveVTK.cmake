@@ -8,7 +8,7 @@ if(SM_RETRIEVE_VTK_INCLUDED)
 endif(SM_RETRIEVE_VTK_INCLUDED)
 set(SM_RETRIEVE_VTK_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # Make sure ZLIB, TIFF, and Qt5Core are present.
 set(ZLIB_FIND_STATIC ON)

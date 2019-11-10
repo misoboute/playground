@@ -5,10 +5,9 @@ if(SM_RETRIEVE_INJA_INCLUDED)
 endif(SM_RETRIEVE_INJA_INCLUDED)
 set(SM_RETRIEVE_INJA_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
-set(_INJA_DESTINATION_FILE
-	${SWISSMEDA_3RDPARTY_INSTALL_DIR}/include/inja/inja.hpp)
+set(_INJA_DESTINATION_FILE ${SM_3RDPARTY_INSTALL_DIR}/include/inja/inja.hpp)
 
 # The URL HASH created using online facility:
 # 	https://hash.online-convert.com/sha1-generator

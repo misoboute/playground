@@ -6,7 +6,7 @@ if(SM_RETRIEVE_FREECGI_INCLUDED)
 endif(SM_RETRIEVE_FREECGI_INCLUDED)
 set(SM_RETRIEVE_FREECGI_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # The URL HASH created using online facility:
 # 	https://hash.online-convert.com/sha1-generator

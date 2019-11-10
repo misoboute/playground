@@ -3,7 +3,7 @@ if(SM_RETRIEVE_MSTCH_INCLUDED)
 endif(SM_RETRIEVE_MSTCH_INCLUDED)
 set(SM_RETRIEVE_MSTCH_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 set(Boost_USE_STATIC_LIBS true)
 sm_find_or_get(Boost REQUIRED)

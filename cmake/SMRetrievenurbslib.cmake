@@ -6,20 +6,20 @@ if(SM_RETRIEVE_LIBNURBS_INCLUDED)
 endif(SM_RETRIEVE_LIBNURBS_INCLUDED)
 set(SM_RETRIEVE_LIBNURBS_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # Make sure ZLIB and openNURBS are present.
 sm_find_or_get(ZLIB)
 sm_find_or_get(openNURBS)
 
-if (NOT EXISTS ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/pbourke)
+if (NOT EXISTS ${SM_3RDPARTY_INSTALL_DIR}/pbourke)
     # We're probably in a subdirectory of the original 3rd party install dir
     # which we use for the unified smopapp:
     get_filename_component(ORIG_3RDPARTY_ROOT
-        ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/.. ABSOLUTE)
-else (NOT EXISTS ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/pbourke)
-    set(ORIG_3RDPARTY_ROOT ${SWISSMEDA_3RDPARTY_INSTALL_DIR})
-endif (NOT EXISTS ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/pbourke)
+        ${SM_3RDPARTY_INSTALL_DIR}/.. ABSOLUTE)
+else (NOT EXISTS ${SM_3RDPARTY_INSTALL_DIR}/pbourke)
+    set(ORIG_3RDPARTY_ROOT ${SM_3RDPARTY_INSTALL_DIR})
+endif (NOT EXISTS ${SM_3RDPARTY_INSTALL_DIR}/pbourke)
 
 # The URL HASH created using online facility:
 # 	https://hash.online-convert.com/sha1-generator

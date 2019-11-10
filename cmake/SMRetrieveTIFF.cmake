@@ -6,7 +6,7 @@ if(SM_RETRIEVE_TIFF_INCLUDED)
 endif(SM_RETRIEVE_TIFF_INCLUDED)
 set(SM_RETRIEVE_TIFF_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 sm_find_or_get(ZLIB)
 

@@ -6,7 +6,7 @@ if(SM_RETRIEVE_OPENNURBS_INCLUDED)
 endif(SM_RETRIEVE_OPENNURBS_INCLUDED)
 set(SM_RETRIEVE_OPENNURBS_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # Make sure ZLIB is present.
 sm_find_or_get(ZLIB)

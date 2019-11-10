@@ -6,7 +6,7 @@ if(SM_RETRIEVE_CURL_INCLUDED)
 endif(SM_RETRIEVE_CURL_INCLUDED)
 set(SM_RETRIEVE_CURL_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 set(ZLIB_FIND_STATIC ON)
 sm_find_or_get(ZLIB REQUIRED)

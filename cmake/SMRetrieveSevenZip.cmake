@@ -10,7 +10,7 @@ if (NOT WIN32)
     return()
 endif (NOT WIN32)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 if (SM_IS_64_BIT)
     set(SEVEN_ZIP_DL_URL
@@ -28,10 +28,10 @@ ExternalProject_Add(
     ${_proj_name}
     URL ${SEVEN_ZIP_DL_URL}
     URL_HASH SHA1=${SEVEN_ZIP_DL_SHA1}
-    DOWNLOAD_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/${_proj_name}
-    SOURCE_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/${_proj_name}
+    DOWNLOAD_DIR ${SM_DOWNLOAD_CACHE_DIR}/Download/${_proj_name}
+    SOURCE_DIR ${SM_DOWNLOAD_CACHE_DIR}/Source/${_proj_name}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ${CMAKE_COMMAND} -E
-        copy_directory <SOURCE_DIR> ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/7-Zip
+        copy_directory <SOURCE_DIR> ${SM_3RDPARTY_INSTALL_DIR}/7-Zip
 )

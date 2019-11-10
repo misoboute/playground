@@ -9,7 +9,7 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(SM_IS_64_BIT FALSE)
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-# SwissMeda specific directories used in build:
+# SMUtil specific directories used in build:
 # PROGRAMDATA_ROOT is used as a base for download cache, build, and
 # installations.
 if (WIN32)
@@ -19,38 +19,38 @@ if (WIN32)
     file(TO_CMAKE_PATH "$ENV{ProgramData}" PROGRAMDATA_ROOT)
 
     if(SM_IS_64_BIT)
-        set(PROGRAMDATA_ROOT_SWISSMEDA_POSTFIX 64)
+        set(PROGRAMDATA_ROOT_SM_POSTFIX 64)
         set(SM_ARCHITECTURE x64)
     else(SM_IS_64_BIT)
-        set(PROGRAMDATA_ROOT_SWISSMEDA_POSTFIX "")
+        set(PROGRAMDATA_ROOT_SM_POSTFIX "")
         set(SM_ARCHITECTURE x86)
     endif(SM_IS_64_BIT)
 elseif (APPLE)
     set(PROGRAMDATA_ROOT /usr/local)
 endif(WIN32)
 
-set(SWISSMEDA_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+set(SM_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
-set(SWISSMEDA_DIR_NAME swissmeda CACHE STRING
-    "Base name of the Swissmeda directory. This directory will be created under
+set(SM_DIR_NAME misoboute CACHE STRING
+    "Base name of the directory. This directory will be created under
 the ProgramData directory and everything is placed there.")
 
-set(SWISSMEDA_PROGRAMDATA_DIR
-    ${PROGRAMDATA_ROOT}/${SWISSMEDA_DIR_NAME}${PROGRAMDATA_ROOT_SWISSMEDA_POSTFIX}
+set(SM_PROGRAMDATA_DIR
+    ${PROGRAMDATA_ROOT}/${SM_DIR_NAME}${PROGRAMDATA_ROOT_SM_POSTFIX}
     CACHE PATH
     "Path to the base directory within ProgramData where everything (download,
 source, build, install) is stored.")
 
-set(SWISSMEDA_DOWNLOAD_CACHE_DIR
-    ${SWISSMEDA_PROGRAMDATA_DIR}/cache
+set(SM_DOWNLOAD_CACHE_DIR
+    ${SM_PROGRAMDATA_DIR}/cache
     CACHE PATH
     "Directory path to be used as cache for retrieving third-party \
 libraries if they are not found by find_package procedures.")
 
-set(SWISSMEDA_3RDPARTY_INSTALL_DIR
-    ${SWISSMEDA_PROGRAMDATA_DIR}
+set(SM_3RDPARTY_INSTALL_DIR
+    ${SM_PROGRAMDATA_DIR}
     CACHE PATH
-    "Install prefix for 3rd party libraries retrieved and used by SwissMeda. \
+    "Install prefix for 3rd party libraries retrieved and used by SMUtil. \
 The find_* procedures will search this path first.")
 
 # The build directory for the 3rdparty libraries is a shortened hash of the
@@ -61,28 +61,28 @@ The find_* procedures will search this path first.")
 string(MD5 BUILD_SYSTEM_HASH
     "${CMAKE_GENERATOR}${CMAKE_GENERATOR_PLATFORM}${CMAKE_GENERATOR_TOOLSET}")
 string(SUBSTRING ${BUILD_SYSTEM_HASH} 0 8 BUILD_SYSTEM_HASH)
-set(SWISSMEDA_3RDPARTY_BUILD_DIR
-    ${SWISSMEDA_PROGRAMDATA_DIR}/build/${BUILD_SYSTEM_HASH} CACHE PATH
+set(SM_3RDPARTY_BUILD_DIR
+    ${SM_PROGRAMDATA_DIR}/build/${BUILD_SYSTEM_HASH} CACHE PATH
     "Directory path used for the build processes of the third-party libraries.")
 
-set(SWISSMEDA_BUILD_INFO_FILE ${SWISSMEDA_3RDPARTY_BUILD_DIR}/BuildInfo.txt)
+set(SM_BUILD_INFO_FILE ${SM_3RDPARTY_BUILD_DIR}/BuildInfo.txt)
 
-set(SWISSMEDA_3RDPARTY_CONFIGURATION_TYPES Debug Release CACHE PATH
+set(SM_3RDPARTY_CONFIGURATION_TYPES Debug Release CACHE PATH
     "Configuration types in which 3rd party libraries are built.")
 
-# All the libraries are installed to ${SWISSMEDA_3RDPARTY_INSTALL_DIR}. So
+# All the libraries are installed to ${SM_3RDPARTY_INSTALL_DIR}. So
 # adding it to the prefix path will ensure that calls to find_package will
 # find them there.
-if (NOT ${SWISSMEDA_3RDPARTY_INSTALL_DIR} IN_LIST CMAKE_PREFIX_PATH)
-    list(APPEND CMAKE_PREFIX_PATH ${SWISSMEDA_3RDPARTY_INSTALL_DIR})
-    list(APPEND CMAKE_PROGRAM_PATH ${SWISSMEDA_3RDPARTY_INSTALL_DIR})
-endif(NOT ${SWISSMEDA_3RDPARTY_INSTALL_DIR} IN_LIST CMAKE_PREFIX_PATH)
+if (NOT ${SM_3RDPARTY_INSTALL_DIR} IN_LIST CMAKE_PREFIX_PATH)
+    list(APPEND CMAKE_PREFIX_PATH ${SM_3RDPARTY_INSTALL_DIR})
+    list(APPEND CMAKE_PROGRAM_PATH ${SM_3RDPARTY_INSTALL_DIR})
+endif(NOT ${SM_3RDPARTY_INSTALL_DIR} IN_LIST CMAKE_PREFIX_PATH)
 
 # Bring in ExternalProject so we can easily download and install external
 # dependencies. The EP_BASE directory property determines where our build system
 # and build artifacts for external projects will go.
 include(ExternalProject)
-set_directory_properties(PROPERTIES EP_BASE ${SWISSMEDA_3RDPARTY_BUILD_DIR})
+set_directory_properties(PROPERTIES EP_BASE ${SM_3RDPARTY_BUILD_DIR})
 
 # Target upload-aws causes all the files marked for upload (by calling
 # sm_upload_to_aws) to be uploaded.
@@ -320,8 +320,8 @@ function(sm_clean_ext_proj_build_sys_files BINARY_DIR PACKAGE_NAME)
     endforeach (RELATED_FILE)
     message("   Deleting Stamp and tmp directories...")
     file(REMOVE_RECURSE
-        ${SWISSMEDA_3RDPARTY_BUILD_DIR}/Stamp/${PACKAGE_NAME}
-        ${SWISSMEDA_3RDPARTY_BUILD_DIR}/tmp/${PACKAGE_NAME}
+        ${SM_3RDPARTY_BUILD_DIR}/Stamp/${PACKAGE_NAME}
+        ${SM_3RDPARTY_BUILD_DIR}/tmp/${PACKAGE_NAME}
     )
 endfunction(sm_clean_ext_proj_build_sys_files)
 
@@ -531,19 +531,19 @@ endmacro(create_dir_if_not_exists)
 # directory name is a shortened hash of all the build system configuration and
 # and the configuration is not obvious from directory name.
 macro(create_3rdparty_build_info_file)
-    create_dir_if_not_exists(${SWISSMEDA_PROGRAMDATA_DIR})
-    create_dir_if_not_exists(${SWISSMEDA_PROGRAMDATA_DIR}/build)
-    create_dir_if_not_exists(${SWISSMEDA_3RDPARTY_BUILD_DIR})
+    create_dir_if_not_exists(${SM_PROGRAMDATA_DIR})
+    create_dir_if_not_exists(${SM_PROGRAMDATA_DIR}/build)
+    create_dir_if_not_exists(${SM_3RDPARTY_BUILD_DIR})
 
-    if(NOT EXISTS ${SWISSMEDA_BUILD_INFO_FILE})
-        file(WRITE ${SWISSMEDA_BUILD_INFO_FILE}
+    if(NOT EXISTS ${SM_BUILD_INFO_FILE})
+        file(WRITE ${SM_BUILD_INFO_FILE}
 "Build system info
 ==================
 CMAKE_GENERATOR: ${CMAKE_GENERATOR}
 CMAKE_GENERATOR_PLATFORM: ${CMAKE_GENERATOR_PLATFORM}
 CMAKE_GENERATOR_TOOLSET: ${CMAKE_GENERATOR_TOOLSET}
 ")
-    endif(NOT EXISTS ${SWISSMEDA_BUILD_INFO_FILE})
+    endif(NOT EXISTS ${SM_BUILD_INFO_FILE})
 endmacro(create_3rdparty_build_info_file)
 
 # Determines whether a given path (DESCENDANT_PATH) is a direct or indirect
@@ -596,13 +596,13 @@ option(USE_OLD_FINDPACKAGE
 # We shall use this macro to find a package instead of plain find_package.
 # Its syntax is identical to that of find_package.
 # It calls the find_package and if the package cannot be found, or if the
-# found package include directories are not in the SwissMeda third party
+# found package include directories are not in the SMUtil third party
 # install directory, it includes the relevant module for downloading, building,
 # and installing of the package.
 # Use the VERIF_TARGET to specify an imported target for verifying
 # the finding of the package and the location of include directories.
 # Use the EXTRA_PREFIX to specify a supplementary path to be appended to the
-# default SwissMeda third party install directory. It will accept the package
+# default SMUtil third party install directory. It will accept the package
 # only if it is found within that directory and, if not found, it will build
 # and install it to that directory.
 macro(sm_find_or_get PACKAGE_NAME)
@@ -633,9 +633,9 @@ else(USE_OLD_FINDPACKAGE)
 
     if (SM_FOG_EXTRA_PREFIX)
         set(_acceptable_prefix
-            ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/${SM_FOG_EXTRA_PREFIX})
+            ${SM_3RDPARTY_INSTALL_DIR}/${SM_FOG_EXTRA_PREFIX})
     else (SM_FOG_EXTRA_PREFIX)
-        set(_acceptable_prefix ${SWISSMEDA_3RDPARTY_INSTALL_DIR})
+        set(_acceptable_prefix ${SM_3RDPARTY_INSTALL_DIR})
     endif (SM_FOG_EXTRA_PREFIX)
 
     if(${PACKAGE_NAME}_FOUND OR TARGET "${SM_FOG_VERIF_TARGET}")
@@ -649,12 +649,12 @@ else(USE_OLD_FINDPACKAGE)
     set(PACKAGE_NAME_INCLUDE_DIRS ${${PACKAGE_NAME}_INCLUDE_DIRS})
 
     if(_correct_package)
-        message("swissmeda built ${PACKAGE_NAME} found at:${PACKAGE_NAME_INCLUDE_DIRS}")
+        message("SMUtil built ${PACKAGE_NAME} found at:${PACKAGE_NAME_INCLUDE_DIRS}")
     else(_correct_package)
         # So we have to create and build a new project that includes the module
         # with build targets for retrieving, building, and installing of the
         # package.
-        message("Unable to find swissmeda ${PACKAGE_NAME}: Try to build ...")
+        message("Unable to find SMUtil ${PACKAGE_NAME}: Try to build ...")
         set(_ext_proj_path ${CMAKE_BINARY_DIR}/3rdparty/${PACKAGE_NAME})
         file(REMOVE_RECURSE ${_ext_proj_path})
 
@@ -689,10 +689,10 @@ STRING=${_find_package_ver_arg}")
             MODULES SMRetrieve${PACKAGE_NAME}
             PROJ_PATH ${_ext_proj_path}
             CACHE_ARGS
-                -DSWISSMEDA_DOWNLOAD_CACHE_DIR=${SWISSMEDA_DOWNLOAD_CACHE_DIR}
-                -DSWISSMEDA_3RDPARTY_BUILD_DIR=${SWISSMEDA_3RDPARTY_BUILD_DIR}
-                -DSWISSMEDA_3RDPARTY_INSTALL_DIR=${SWISSMEDA_3RDPARTY_INSTALL_DIR}
-                -DSWISSMEDA_3RDPARTY_CONFIGURATION_TYPES=${SWISSMEDA_3RDPARTY_CONFIGURATION_TYPES}
+                -DSM_DOWNLOAD_CACHE_DIR=${SM_DOWNLOAD_CACHE_DIR}
+                -DSM_3RDPARTY_BUILD_DIR=${SM_3RDPARTY_BUILD_DIR}
+                -DSM_3RDPARTY_INSTALL_DIR=${SM_3RDPARTY_INSTALL_DIR}
+                -DSM_3RDPARTY_CONFIGURATION_TYPES=${SM_3RDPARTY_CONFIGURATION_TYPES}
                 -DCMAKE_PREFIX_PATH:STRING=${CMAKE_PREFIX_PATH}
                 -DCMAKE_MODULE_PATH:STRING=${CMAKE_MODULE_PATH}
                 -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
@@ -722,7 +722,7 @@ macro(sm_set_default_var_value VAR_NAME DEFAULT_VAL)
 endmacro(sm_set_default_var_value)
 
 function(sm_add_ext_proj_patch_step EXT_PROJ_NAME EXT_PROJ_TARGET_NAME)
-    set(PATCHED_FILES_DIR ${SWISSMEDA_MODULE_PATH}/patch/${EXT_PROJ_NAME})
+    set(PATCHED_FILES_DIR ${SM_MODULE_PATH}/patch/${EXT_PROJ_NAME})
     if (EXISTS ${PATCHED_FILES_DIR})
         file(GLOB_RECURSE PATCHED_ITEMS
             LIST_DIRECTORIES true RELATIVE ${PATCHED_FILES_DIR}
@@ -763,7 +763,7 @@ endfunction(sm_add_ext_proj_patch_step)
 # the default), compares with the given SHA1 hash, extracts it to the given
 # source directory (or the default). If it finds a directory with the same name
 # as the project under the patch directory in the same directory as
-# SwissMedaUtil.cmake, it will copy the contents to the source directory as a
+# SMUtil.cmake, it will copy the contents to the source directory as a
 # patch step. It then builds the projects in the given configurations (or
 # the defaults). It then installs the project to the given directory (or
 # the default). Extra CMake cache initializers may also be given.
@@ -771,11 +771,11 @@ endfunction(sm_add_ext_proj_patch_step)
 #   * Debug and Release configurations
 #   * Static libraries
 #   * Download directory:
-#       ${SWISSMEDA_PROGRAMDATA_DIR}/cache/Download/<proj-name>
+#       ${SM_PROGRAMDATA_DIR}/cache/Download/<proj-name>
 #   * Source directory:
-#       ${SWISSMEDA_PROGRAMDATA_DIR}/cache/Source/<proj-name>
+#       ${SM_PROGRAMDATA_DIR}/cache/Source/<proj-name>
 #   * Binary directory: ${CMAKE_BINARY_DIR}/Build/<proj-name>
-#   * Install prefix: ${SWISSMEDA_PROGRAMDATA_DIR}(64)?
+#   * Install prefix: ${SM_PROGRAMDATA_DIR}(64)?
 #   * Debug libraries postfixed with `d`
 # The following CMake variables are also passed by default to the build
 # environment:
@@ -822,27 +822,27 @@ EXTRA_CACHE_ARGS_WIN32;PATCH_COMMAND"
     string(TOLOWER ${EXT_PROJ_NAME} _ext_proj_name)
 
     sm_set_default_var_value(EXT_PROJ_DOWNLOAD_DIR
-        ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/${_ext_proj_name})
+        ${SM_DOWNLOAD_CACHE_DIR}/Download/${_ext_proj_name})
 
     sm_set_default_var_value(EXT_PROJ_SOURCE_DIR
-        ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/${_ext_proj_name})
+        ${SM_DOWNLOAD_CACHE_DIR}/Source/${_ext_proj_name})
 
     sm_set_default_var_value(EXT_PROJ_SOURCE_SUBDIR .)
 
     sm_set_default_var_value(
-        EXT_PROJ_BINARY_DIR ${SWISSMEDA_3RDPARTY_BUILD_DIR}/${_ext_proj_name})
+        EXT_PROJ_BINARY_DIR ${SM_3RDPARTY_BUILD_DIR}/${_ext_proj_name})
 
     if (SM_EXTRA_PREFIX)
         set(_default_install_prefix
-            ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/${SM_EXTRA_PREFIX})
+            ${SM_3RDPARTY_INSTALL_DIR}/${SM_EXTRA_PREFIX})
     else (SM_EXTRA_PREFIX)
-        set(_default_install_prefix ${SWISSMEDA_3RDPARTY_INSTALL_DIR})
+        set(_default_install_prefix ${SM_3RDPARTY_INSTALL_DIR})
     endif (SM_EXTRA_PREFIX)
     sm_set_default_var_value(
         EXT_PROJ_INSTALL_DIR ${_default_install_prefix})
 
     sm_set_default_var_value(
-        EXT_PROJ_CONFIGS "${SWISSMEDA_3RDPARTY_CONFIGURATION_TYPES}")
+        EXT_PROJ_CONFIGS "${SM_3RDPARTY_CONFIGURATION_TYPES}")
 
     if(TARGET ${_ext_proj_name})
         message(AUTHOR_WARNING
@@ -942,7 +942,7 @@ endfunction(sm_add_ext_cmake_project)
 
 function(sm_clean_3rdparty_install_dir)
     message("Clean up 3rdparty library install directory")
-    sm_list_dir(${SWISSMEDA_3RDPARTY_INSTALL_DIR})
+    sm_list_dir(${SM_3RDPARTY_INSTALL_DIR})
     set(ALLOWED_DIR_LIST
         .DS_Store
         7-Zip
@@ -971,10 +971,10 @@ function(sm_clean_3rdparty_install_dir)
         iconv-license.txt
     )
 
-    set(JUNK_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/junk)
+    set(JUNK_DIR ${SM_3RDPARTY_INSTALL_DIR}/junk)
 
     file(GLOB EXISTING_DIR_LIST LIST_DIRECTORIES true
-        ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/*)
+        ${SM_3RDPARTY_INSTALL_DIR}/*)
 
     foreach(DIR_ENTRY ${EXISTING_DIR_LIST})
         get_filename_component(ENTRY_NAME ${DIR_ENTRY} NAME)
@@ -991,7 +991,7 @@ function(sm_clean_3rdparty_install_dir)
 endfunction(sm_clean_3rdparty_install_dir)
 
 # Use this macro to create a portable command line (usable with
-# add_custom_command, etc) that invokes swissmeda extensions to cmake command
+# add_custom_command, etc) that invokes extensions to cmake command
 # line tool. These commands are supposed to complement "CMake command line tool"
 # (cmake -E). Always make the command VERBATIM to avoid unescaped semicolons
 # on Unix.
@@ -1003,7 +1003,7 @@ function(sm_create_extended_cmdln COMMAND_VAR COMMAND_NAME)
         ${CMAKE_COMMAND}
             -D EXT_COMMAND=${COMMAND_NAME}
             -D CMDARGS=${ESCAPED_ARGS}
-            -P ${SWISSMEDA_MODULE_PATH}/CommandLineTool.cmake
+            -P ${SM_MODULE_PATH}/CommandLineTool.cmake
         PARENT_SCOPE
     )
 endfunction(sm_create_extended_cmdln)

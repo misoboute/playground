@@ -1,4 +1,4 @@
-# Created by Swissmeda. freeCGI does not provide its own CMake based build
+# freeCGI does not provide its own CMake based build
 # system at this point. This 
 
 cmake_minimum_required(VERSION 2.8)

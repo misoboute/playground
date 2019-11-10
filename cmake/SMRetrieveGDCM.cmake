@@ -6,7 +6,7 @@ if(SM_RETRIEVE_GDCM_INCLUDED)
 endif(SM_RETRIEVE_GDCM_INCLUDED)
 set(SM_RETRIEVE_GDCM_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # Make sure ZLIB and VTK are present.
 set(ZLIB_FIND_STATIC ON)

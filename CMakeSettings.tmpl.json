@@ -8,10 +8,6 @@
             "inheritEnvironments": [ "msvc_x64_x64" ],
             "variables": [
                 {
-                    "name": "SM_PLANNING_TOOL_DIR",
-                    "value": "C:/src/planning_program_win/"
-                },
-                {
                     "name": "SM_BUILD_QT_WEBCHANNEL",
                     "value": "ON"
                 }
@@ -28,10 +24,6 @@
             "configurationType": "Release",
             "inheritEnvironments": [ "msvc_x64_x64" ],
             "variables": [
-                {
-                    "name": "SM_PLANNING_TOOL_DIR",
-                    "value": "C:/src/planning_program_win/"
-                },
                 {
                     "name": "SM_BUILD_QT_WEBCHANNEL",
                     "value": "ON"

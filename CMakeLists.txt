@@ -6,15 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(playground)
 
-set(SM_PLANNING_TOOL_DIR "" CACHE PATH
-    "Root directory of the swissmeda planning tool project. If set, this will \
-add swissmeda cmake modules directory to CMAKE_MODULE_PATH and include \
-SwissMedaUtil."
-)
-if (SM_PLANNING_TOOL_DIR)
-    list(APPEND CMAKE_MODULE_PATH ${SM_PLANNING_TOOL_DIR}/src/cmake)
-    include(SwissMedaUtil)
-endif (SM_PLANNING_TOOL_DIR)
+set(PLAYGROUND_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+
+list(APPEND CMAKE_MODULE_PATH ${PLAYGROUND_ROOT}/cmake)
+include(SMUtil)
 
 set(SM_ALL_AREAS 
     BenchmarkConsecutiveInserts

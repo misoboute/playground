@@ -1,4 +1,4 @@
-include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
+include_directories(${PLAYGROUND_ROOT}/include/test)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 

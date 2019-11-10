@@ -7,7 +7,7 @@ set(SOURCES
     qml.qrc
 )
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 find_package(Qt5 COMPONENTS Widgets Qml Quick REQUIRED)
 

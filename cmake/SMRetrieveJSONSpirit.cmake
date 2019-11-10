@@ -7,7 +7,7 @@ if(SM_RETRIEVE_JSON_SPIRIT_INCLUDED)
 endif(SM_RETRIEVE_JSON_SPIRIT_INCLUDED)
 set(SM_RETRIEVE_JSON_SPIRIT_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # Make sure Boost is present.
 sm_find_or_get(Boost)

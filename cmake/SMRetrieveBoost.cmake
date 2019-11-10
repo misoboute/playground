@@ -5,7 +5,7 @@ if(SM_RETRIEVE_BOOST_INCLUDED)
 endif(SM_RETRIEVE_BOOST_INCLUDED)
 set(SM_RETRIEVE_BOOST_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 if (${CMAKE_GENERATOR} MATCHES "Visual Studio 15 2017")
     set(BOOST_BUILD_TOOLSET msvc-14.1)
@@ -31,7 +31,7 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(_boost_address_model 32)
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-set(_boost_src_dir ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/boost)
+set(_boost_src_dir ${SM_DOWNLOAD_CACHE_DIR}/Source/boost)
 if(WIN32)
     # The bootstrap must be run from an MSVS developer command prompt.
     # We shall set the environment instead using vcvarsall in a batch
@@ -56,16 +56,16 @@ elseif(APPLE)
 endif(WIN32)
 message("_boost_bootstrap_command: ${_boost_bootstrap_command}")
 
-sm_clean_ext_proj_build_sys_files(${SWISSMEDA_3RDPARTY_BUILD_DIR}/boost boost)
+sm_clean_ext_proj_build_sys_files(${SM_3RDPARTY_BUILD_DIR}/boost boost)
 
 ExternalProject_Add(
     boost
     URL ${BOOST_DL_URL}
     URL_HASH SHA1=${BOOST_DL_SHA1}
-    DOWNLOAD_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/boost
+    DOWNLOAD_DIR ${SM_DOWNLOAD_CACHE_DIR}/Download/boost
     SOURCE_DIR ${_boost_src_dir}
-    BINARY_DIR ${SWISSMEDA_3RDPARTY_BUILD_DIR}/boost
-    INSTALL_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}
+    BINARY_DIR ${SM_3RDPARTY_BUILD_DIR}/boost
+    INSTALL_DIR ${SM_3RDPARTY_INSTALL_DIR}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""

@@ -7,7 +7,7 @@ if(SM_RETRIEVE_GMOCK_INCLUDED)
 endif(SM_RETRIEVE_GMOCK_INCLUDED)
 set(SM_RETRIEVE_GMOCK_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # The MSVS 2017 (19.10+) can't build GTest v1.8.0, so we'll have to upgrade to
 # at least v1.8.1 (laterst at the time). But GTest v1.8.1, for some reason

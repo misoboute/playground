@@ -5,10 +5,10 @@ if(SM_RETRIEVE_BOOST_INCLUDED)
 endif(SM_RETRIEVE_BOOST_INCLUDED)
 set(SM_RETRIEVE_BOOST_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 set(_NLOHMANN_JSON_DESTINATION_FILE
-    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/include/nlohmann/json.hpp)
+    ${SM_3RDPARTY_INSTALL_DIR}/include/nlohmann/json.hpp)
 
 # The URL HASH created using online facility:
 # 	https://hash.online-convert.com/sha1-generator

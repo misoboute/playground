@@ -12,7 +12,7 @@ find_package_handle_standard_args(Gettext DEFAULT_MSG
     GETTEXT_XGETTEXT_EXECUTABLE GETTEXT_MSGINIT_EXECUTABLE)
 
 # Based on the location of *_INLCUDE_DIRS, sm_find_or_get decides whether it
-# has found the right package (built by swissmeda):
+# has found the right package (built by SMUtil):
 get_filename_component(
     Gettext_INCLUDE_DIRS ${GETTEXT_XGETTEXT_EXECUTABLE} DIRECTORY)
 

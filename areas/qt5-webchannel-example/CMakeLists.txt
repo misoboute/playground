@@ -1,15 +1,13 @@
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-list(APPEND CMAKE_PREFIX_PATH 
-    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64
-)
+list(APPEND CMAKE_PREFIX_PATH ${SM_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64)
 sm_find_or_get(Qt5
     COMPONENTS Network WebChannel WebSockets Widgets
     VERIF_TARGET Qt5::WebChannel REQUIRED
 )
 
-include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
+include_directories(${PLAYGROUND_ROOT}/include/test)
 
 add_definitions(-DBUILD_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/standalone\")
 set(SOURCES 

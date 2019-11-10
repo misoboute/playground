@@ -32,7 +32,7 @@ if(QtCipherSqlitePlugin_FOUND)
             ${QtCipherSqlitePlugin_LIBRARY_RELEASE})
     endif(QtCipherSqlitePlugin_LIBRARY_DEBUG)
     # sm_find_or_get expects an include directory variable to check whether
-    # the include directories are inside the swissmeda 3rd party install
+    # the include directories are inside the SMUtil 3rd party install
     # directory.
     get_filename_component(
         QtCipherSqlitePlugin_INCLUDE_DIRS

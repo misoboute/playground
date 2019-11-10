@@ -1,10 +1,10 @@
 list(APPEND CMAKE_PREFIX_PATH 
-    ${SWISSMEDA_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64
+    ${SM_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64
 )
 
 find_package(Qt5 COMPONENTS Core)
 
-include_directories(${SM_PLANNING_TOOL_DIR}/src/include/test_util)
+include_directories(${PLAYGROUND_ROOT}/include/test)
 
 set(SOURCES 
     main.cpp

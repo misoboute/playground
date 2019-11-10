@@ -5,7 +5,7 @@ if(SM_RETRIEVE_GETTEXT_INCLUDED)
 endif(SM_RETRIEVE_GETTEXT_INCLUDED)
 set(SM_RETRIEVE_GETTEXT_INCLUDED 1)
 
-include(SwissMedaUtil)
+include(SMUtil)
 
 # The URL HASH created using online facility:
 # 	https://hash.online-convert.com/sha1-generator
@@ -24,10 +24,9 @@ if (WIN32)
         gettext
         URL ${GETTEXT_DL_URL}
         URL_HASH SHA1=${GETTEXT_DL_SHA1}
-        DOWNLOAD_DIR
-            ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/gettext
-        SOURCE_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/gettext
-        INSTALL_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}
+        DOWNLOAD_DIR ${SM_DOWNLOAD_CACHE_DIR}/Download/gettext
+        SOURCE_DIR ${SM_DOWNLOAD_CACHE_DIR}/Source/gettext
+        INSTALL_DIR ${SM_3RDPARTY_INSTALL_DIR}
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND
@@ -35,17 +34,16 @@ if (WIN32)
     )
 else (WIN32)
     sm_clean_ext_proj_build_sys_files(
-        ${SWISSMEDA_3RDPARTY_BUILD_DIR}/gettext gettext)
+        ${SM_3RDPARTY_BUILD_DIR}/gettext gettext)
 
     ExternalProject_Add(
         gettext
         URL http://ftp.gnu.org/pub/gnu/gettext/gettext-0.20.tar.gz
         URL_HASH SHA1=58AD0E554D5DFB537FF0FF1E604220F327DE2889
-        DOWNLOAD_DIR
-            ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Download/gettext
-        SOURCE_DIR ${SWISSMEDA_DOWNLOAD_CACHE_DIR}/Source/gettext
-        BINARY_DIR ${SWISSMEDA_3RDPARTY_BUILD_DIR}/gettext
-        INSTALL_DIR ${SWISSMEDA_3RDPARTY_INSTALL_DIR}
+        DOWNLOAD_DIR ${SM_DOWNLOAD_CACHE_DIR}/Download/gettext
+        SOURCE_DIR ${SM_DOWNLOAD_CACHE_DIR}/Source/gettext
+        BINARY_DIR ${SM_3RDPARTY_BUILD_DIR}/gettext
+        INSTALL_DIR ${SM_3RDPARTY_INSTALL_DIR}
         CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
         BUILD_COMMAND make
         INSTALL_COMMAND make install
