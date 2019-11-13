@@ -32,7 +32,6 @@ set(SM_ALL_AREAS
     challenge/single-swap-sort
     challenge/tomtom-1
     challenge/tomtom-3
-    challenge/tomtom-4
     pedastep
     qt-webchannel
     qt5-webchannel-example

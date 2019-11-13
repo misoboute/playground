@@ -1,10 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 
 list(APPEND CMAKE_PREFIX_PATH ${SM_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64)
-sm_find_or_get(Qt5
-    COMPONENTS WebChannel WebEngineWidgets 
-    VERIF_TARGET Qt5::WebEngineWidgets REQUIRED
-)
+find_package(Qt5 COMPONENTS WebChannel WebEngineWidgets REQUIRED)
 
 include_directories(${PLAYGROUND_ROOT}/include/test)
 

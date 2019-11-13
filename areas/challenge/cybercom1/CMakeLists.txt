@@ -1,5 +1,3 @@
-set(CMAKE_AUTOMOC ON)
-
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
