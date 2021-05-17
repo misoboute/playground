@@ -5,21 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "MIMode": "lldb",
-            "name": "Debug current CMake Tools target",
+
+            // Resolved by CMake Tools:
             "program": "${command:cmake.launchTargetPath}",
-            "cwd": "${workspaceFolder}/build/areas/MarjanQML/Debug",
-            "args": ["Input.txt", "Output.csv", "یزی نگرفت", "212211221122112" ],
-            "setupCommands": [
-                // Enable breakpoint on C++ exception throw and catch. If this
-                // doesn't work try settings breakpoint on the native 
-                // rutine exception handling functions (__cxa_throw, 
-                // __cxa_rethrow, and __cxa_begin_catch in macOS 
-                // libc++abi.dylib)
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${command:cmake.launchTargetDirectory}",
+            "environment": [
                 {
-                    "text": "breakpoint set --language-exception C++ --on-catch true --on-throw true"
+                    "name": "PATH",
+                    "value": "$PATH:${workspaceFolder}"
+                }
+            ],
+            // "console": "externalTerminal",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
                 }
             ]
         }
