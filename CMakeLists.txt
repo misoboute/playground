@@ -13,6 +13,7 @@ include(SMUtil)
 
 set(SM_ALL_AREAS 
     BenchmarkConsecutiveInserts
+    CodersStrikeBack
     MarjanQML
     MoveCopyCtors
     challenge/adjacent-coins
