@@ -75,14 +75,14 @@ public:
     static double Radians(double degrees) { return degrees * Pi / 180; }
     static double Degrees(double degrees) { return degrees / Pi * 180; }
 
-    static bool IsZeroWithEpsilon(double val) 
+    static bool IsZeroWithEpsilon(double val, double eps = Epsilon) 
     { 
-        return std::abs(val) < Epsilon; 
+        return std::abs(val) < eps; 
     }
 
-    static bool AreEqualWithEpsilon(double a, double b) 
+    static bool AreEqualWithEpsilon(double a, double b, double eps = Epsilon) 
     { 
-        return std::abs(a - b) < Epsilon; 
+        return std::abs(a - b) < eps; 
     }
 
     template<typename T>
@@ -234,6 +234,17 @@ public:
             std::cbegin(other.m_Elems), ElemT());
     }
 
+    VecT Cross(const VecT& other) const
+    {
+        static_assert(
+            Dimensions == 3, "Cross product is defined only for 3D vectors.");
+        return VecT{ 
+            m_Elems[1] * other[2] - other[1] * m_Elems[2],
+            m_Elems[2] * other[0] - other[2] * m_Elems[0],
+            m_Elems[0] * other[1] - other[0] * m_Elems[1],
+        };
+    }
+
     bool IsNull() const
     {
         for (size_t i = 0; i < Dimensions; ++i)
@@ -287,6 +298,27 @@ public:
         for (size_t i = 0; i < Dimensions; ++i)
             result[i] = m_Elems[i] * scale;
         return result;
+    }
+
+    template <class OtherT, size_t OtherDim>
+    friend class Vec;
+
+    template<size_t NewDims>
+    constexpr Vec<ElemT, NewDims> ChangeDims()
+    {
+        Vec<ElemT, NewDims> result;
+        if (NewDims > Dimensions)
+        {
+            auto firstZero = std::copy_n(std::cbegin(m_Elems), Dimensions
+                , std::begin(result.m_Elems));
+            std::fill(firstZero, std::end(result.m_Elems), ElemT());
+        }
+        return result;
+    }
+
+    double AngleTo(const VecT& other)
+    {
+        return std::acos(GetNormalized() * other.GetNormalized());
     }
 
 private:
@@ -634,6 +666,9 @@ protected:
     }
 
     static constexpr double FrictionRate = 0.85;
+    static constexpr double MaxThrust = 100;
+    static constexpr double MaxSpeed
+        = MaxThrust * FrictionRate / (1 - FrictionRate);
 
     const GameLoop& m_Game;
     const Pod& m_Pod;
@@ -641,12 +676,12 @@ protected:
     const Pilot& m_Teammate;
 
 private:
-    const Pod& GetOtherPod(size_t thisIndex) 
+    const Pod& GetOtherPod(size_t thisIndex) const
     { 
         return m_Game.GetPods()[1 - thisIndex];
     }
 
-    const Pilot& GetOtherPilot(size_t thisIndex) 
+    const Pilot& GetOtherPilot(size_t thisIndex) const 
     { 
         return *m_Game.GetPilots()[1 - thisIndex];
     }
@@ -698,6 +733,9 @@ private:
     static CurveFuncT CalcCurveFunc(
         const VecT& pt1, const VecT& pt2, const VecT& pt3);
 
+    static void CalcBkwdTurnFromPt2To1UntilAngleCovered(
+        const VecT& pt1, const VecT& pt2, const VecT& pt3, double angle);
+
     VecT m_InitPos;
 };
 
@@ -706,14 +744,19 @@ GameLoop GameLoop::FromStdInput()
     int laps;
     std::cin >> laps;
     std::cin.ignore();
+    std::cerr << laps << std::endl;
+
     int checkpointCount;
     std::cin >> checkpointCount;
     std::cin.ignore();
+    std::cerr << checkpointCount << std::endl;
+    
     CheckPointColT checkPoints(checkpointCount);
     for (int i = 0; i < checkpointCount; i++)
     {
         std::cin >> checkPoints[i];
         std::cin.ignore();
+        std::cerr << checkPoints[i] << std::endl;
     }
     return GameLoop(laps, checkPoints);
 }
@@ -743,18 +786,50 @@ void GameLoop::Update()
     {
         std::cin >> p;
         std::cin.ignore();
+        std::cerr << p.GetAngle() << " " << p.GetCheckPointId() << " "
+            << p.GetPos()[0] << " " << p.GetPos()[1] << " "
+            << p.GetVel()[0] << " " << p.GetVel()[1] << " " 
+            << std::endl;
     }
     for (auto& p : m_OpponentPods)
     {
         std::cin >> p;
         std::cin.ignore();
+        std::cerr << p.GetAngle() << " " << p.GetCheckPointId() << " "
+            << p.GetPos()[0] << " " << p.GetPos()[1] << " "
+            << p.GetVel()[0] << " " << p.GetVel()[1] << " " 
+            << std::endl;
     }
     for (auto& p : m_Pilots)
     {
         p->Update();
-        std::cout << *p << std::endl;
+        std::cerr << *p << std::endl;
     }
     timer.Check();
+}
+
+void RacePilot::CalcBkwdTurnFromPt2To1UntilAngleCovered(
+    const VecT& pt1, const VecT& pt2, const VecT& pt3, double angle)
+{
+    auto dir1To2 = (pt2 - pt1).GetNormalized();
+    auto dir2To3 = (pt3 - pt2).GetNormalized();
+    auto dir1To3 = (pt3 - pt1).GetNormalized();
+    auto pt2Vel = MaxSpeed * (dir1To2 + dir2To3).GetNormalized();
+    
+    auto pos = pt2;
+    auto vel = pt2Vel;
+    while (vel.AngleTo(pt2Vel) < angle)
+    {
+        auto velDir = vel.GetNormalized();
+        auto vel3D = vel.ChangeDims<3>();
+        auto accDir = dir1To2 * vel >= 0 ? dir1To3 : 
+            vel3D.Cross(dir1To3.ChangeDims<3>()).
+                Cross(vel3D).ChangeDims<2>().GetNormalized();
+        auto acc = MaxThrust * accDir;
+        vel = vel / FrictionRate - acc;
+        pos -= vel;
+    }
+    
 }
 
 void RacePilot::Update()
@@ -769,72 +844,100 @@ void RacePilot::Update()
     auto ang = m_Pod.GetAngle();
     auto pos = m_Pod.GetPos();
     auto vel = m_Pod.GetVel();
+    
+    auto posToCurChkDir = (curChk - pos).GetNormalized();
+    auto curToNextChkDir = (nextChk - curChk).GetNormalized();
+    auto posToNextChkDir = (nextChk - pos).GetNormalized();
+    auto curChkVel = MaxSpeed * (posToCurChkDir + curToNextChkDir).GetNormalized();
+    
+    auto curPos = curChk;
+    auto curVel = curChkVel;
+    auto curVelDir = curVel.GetNormalized();
+    auto curVel3D = curVel.ChangeDims<3>();
+    auto prevAccDir = posToCurChkDir * curVel >= 0 ? posToNextChkDir : 
+        curVel3D.Cross(posToNextChkDir.ChangeDims<3>()).
+            Cross(curVel3D).ChangeDims<2>();
+    auto prevAcc = MaxThrust * prevAccDir;
+    auto prevVel = curVel / FrictionRate - prevAcc;
+    auto prevPos = curPos - prevVel;
 
-    auto fouthPt = (nextChk - curChk) / 2;
+
+    // auto fouthPt = (nextChk - curChk) / 2;
+
+    // using MatT = Matrix<double, 4, 4>;
+    // MatT::ElemsArrayT elemsArr {
+    //     { pos[0] * pos[0], pos[1] * pos[1], pos[0], pos[1] },
+    //     { curChk[0] * curChk[0], curChk[1] * curChk[1], curChk[0], curChk[1] },
+    //     { nextChk[0] * nextChk[0], nextChk[1] * nextChk[1], nextChk[0], nextChk[1] },
+    //     { fouthPt[0] * fouthPt[0], fouthPt[1] * fouthPt[1], fouthPt[0], fouthPt[1] }
+    // };
+    // MatT eqSys{elemsArr};
+    // std::cerr << "MatT(elemsArr):" << eqSys << std::endl;
+    // MatT eqSolver;
+    // if (!eqSys.CalcInverse(eqSolver))
+    // {
+    //     std::cerr << "Inverse calc failed!" << std::endl;
+    // }
+    // std::cerr << "Solver:" << eqSolver << std::endl;
+    // auto curveCoeffs = eqSolver * Matrix<double, 4, 1>(1);
+    // // These four coefficients form an equation that describes the curve that
+    // // we should adhere to: a1 * x ^ 2 + a2 * y ^ 2 + a3 * x + a4 * y - 1 = 0
+    // std::cerr << curveCoeffs << std::endl;
+    // constexpr double maxSpeed = 600;
+    // auto startDir = vel.IsNull() ? (curChk - pos) : vel;
+    // startDir.Normalize();
+    // auto estimTarg = pos + startDir * maxSpeed; // Estimated target point that is supposed to be close to the curve
+    // auto crossPathDir = VecT(-startDir[1], startDir[0]);
+    // auto crossPathSlope = -startDir[1] / startDir[0];
+    // auto crossPathSlopeSqr = crossPathSlope * crossPathSlope;
+    // double cc[4] { curveCoeffs(0, 0), curveCoeffs(1, 0), curveCoeffs(2, 0), curveCoeffs(3, 0) };
+    // auto crossPointXs = SolveQuadraticEquation(
+    //     cc[0] + cc[1] * crossPathSlopeSqr, 
+    //     -2 * cc[1] * crossPathSlopeSqr * estimTarg[0] + cc[3] * crossPathSlope + cc[2],
+    //     cc[1] * crossPathSlopeSqr * estimTarg[0] * estimTarg[0] - cc[3] * crossPathSlope * estimTarg[0] - 1);
+    // auto targetPoint = pos;
+    // std::cerr << "crossPointXs: " << crossPointXs.size() << std::endl;
+    // for (auto cpx : crossPointXs)
+    // {
+    //     auto crossPointYs = SolveQuadraticEquation(
+    //         cc[1], cc[3], cc[0] * cpx * cpx + cc[2] * cpx - 1);
+    //     std::cerr << "crossPointYs: " << crossPointYs.size() << std::endl;
+    //     for (auto cpy : crossPointYs)
+    //     {
+    //         auto crossPoint = VecT(cpx, cpy);
+    //         std::cerr << "crossPoint: " << crossPoint << std::endl;
+    //         std::cerr << "(crossPoint - estimTarg).GetNorm(): " << (crossPoint - estimTarg).GetNorm() << std::endl;
+    //         std::cerr << "(targetPoint - estimTarg).GetNorm(): " << (targetPoint - estimTarg).GetNorm() << std::endl;
+    //         if ((crossPoint - estimTarg).GetNorm() < (targetPoint - estimTarg).GetNorm())
+    //         {
+    //             targetPoint = crossPoint;
+    //         }
+    //     }
+    // }
 
     auto curveFunc = CalcCurveFunc(pos, curChk, nextChk);
-    for (auto i = 0; i < 20; ++i)
+    auto targetDist = 3000;
+    constexpr auto sections = 1000;
+    auto targetPrecision = (pos - curChk).GetNorm() * 5 / sections;
+    auto targetPoint = curChk;
+    for (auto i = 0; i < sections; ++i)
     {
-        auto s = i / static_cast<double>(20);
-        std::cerr << "Curve point " << i << ": " << curveFunc(s) << std::endl;
-    }
-
-    using MatT = Matrix<double, 4, 4>;
-    MatT::ElemsArrayT elemsArr {
-        { pos[0] * pos[0], pos[1] * pos[1], pos[0], pos[1] },
-        { curChk[0] * curChk[0], curChk[1] * curChk[1], curChk[0], curChk[1] },
-        { nextChk[0] * nextChk[0], nextChk[1] * nextChk[1], nextChk[0], nextChk[1] },
-        { fouthPt[0] * fouthPt[0], fouthPt[1] * fouthPt[1], fouthPt[0], fouthPt[1] }
-    };
-    MatT eqSys{elemsArr};
-    std::cerr << "MatT(elemsArr):" << eqSys << std::endl;
-    MatT eqSolver;
-    if (!eqSys.CalcInverse(eqSolver))
-    {
-        std::cerr << "Inverse calc failed!" << std::endl;
-    }
-    std::cerr << "Solver:" << eqSolver << std::endl;
-    auto curveCoeffs = eqSolver * Matrix<double, 4, 1>(1);
-    // These four coefficients form an equation that describes the curve that
-    // we should adhere to: a1 * x ^ 2 + a2 * y ^ 2 + a3 * x + a4 * y - 1 = 0
-    std::cerr << curveCoeffs << std::endl;
-    constexpr double maxSpeed = 600;
-    auto startDir = vel.IsNull() ? (curChk - pos) : vel;
-    startDir.Normalize();
-    auto estimTarg = pos + startDir * maxSpeed; // Estimated target point that is supposed to be close to the curve
-    auto crossPathDir = VecT(-startDir[1], startDir[0]);
-    auto crossPathSlope = -startDir[1] / startDir[0];
-    auto crossPathSlopeSqr = crossPathSlope * crossPathSlope;
-    double cc[4] { curveCoeffs(0, 0), curveCoeffs(1, 0), curveCoeffs(2, 0), curveCoeffs(3, 0) };
-    auto crossPointXs = SolveQuadraticEquation(
-        cc[0] + cc[1] * crossPathSlopeSqr, 
-        -2 * cc[1] * crossPathSlopeSqr * estimTarg[0] + cc[3] * crossPathSlope + cc[2],
-        cc[1] * crossPathSlopeSqr * estimTarg[0] * estimTarg[0] - cc[3] * crossPathSlope * estimTarg[0] - 1);
-    auto targetPoint = pos;
-    std::cerr << "crossPointXs: " << crossPointXs.size() << std::endl;
-    for (auto cpx : crossPointXs)
-    {
-        auto crossPointYs = SolveQuadraticEquation(
-            cc[1], cc[3], cc[0] * cpx * cpx + cc[2] * cpx - 1);
-        std::cerr << "crossPointYs: " << crossPointYs.size() << std::endl;
-        for (auto cpy : crossPointYs)
+        auto s = 4 * i / static_cast<double>(sections);
+        auto pt = curveFunc(s);
+        if (AreEqualWithEpsilon((pt - pos).GetNorm(), targetDist, targetPrecision))
         {
-            auto crossPoint = VecT(cpx, cpy);
-            std::cerr << "crossPoint: " << crossPoint << std::endl;
-            std::cerr << "(crossPoint - estimTarg).GetNorm(): " << (crossPoint - estimTarg).GetNorm() << std::endl;
-            std::cerr << "(targetPoint - estimTarg).GetNorm(): " << (targetPoint - estimTarg).GetNorm() << std::endl;
-            if ((crossPoint - estimTarg).GetNorm() < (targetPoint - estimTarg).GetNorm())
-            {
-                targetPoint = crossPoint;
-            }
+            std::cerr << "Curve point " << i << ": " << curveFunc(s) << std::endl;
+            targetPoint = pt;
+            break;
         }
     }
+
     std::cerr << "Target point: " << targetPoint << std::endl;
     auto neededAcc = (targetPoint - pos - vel * FrictionRate) / FrictionRate;
     auto setThrustTarg = neededAcc.GetNormalized() * (curChk - pos).GetNorm() + pos;
     auto setThrustPower = std::min(neededAcc.GetNorm(), 100.);
     std::cerr << "Needed power: " << neededAcc.GetNorm() << std::endl;
-    SetThrust(setThrustTarg, setThrustPower);
+    SetThrust(targetPoint, setThrustPower);
 }
 
 RacePilot::CurveFuncT RacePilot::CalcCurveFunc(
