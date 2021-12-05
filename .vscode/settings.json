@@ -87,7 +87,11 @@
         "memory_resource": "cpp",
         "optional": "cpp",
         "ranges": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "any": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
     "C_Cpp.configurationWarnings": "Disabled"

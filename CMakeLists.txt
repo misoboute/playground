@@ -9,7 +9,7 @@ project(playground)
 set(PLAYGROUND_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 list(APPEND CMAKE_MODULE_PATH ${PLAYGROUND_ROOT}/cmake)
-include(SMUtil)
+include(FOBBootstrap)
 
 set(SM_ALL_AREAS 
     BenchmarkConsecutiveInserts
@@ -30,6 +30,7 @@ set(SM_ALL_AREAS
     challenge/maven-1
     challenge/maven-2
     challenge/maven-3
+    challenge/optiver
     challenge/single-swap-sort
     challenge/tomtom-1
     challenge/tomtom-3

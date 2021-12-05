@@ -21,6 +21,7 @@
                 }
             ],
             // "console": "externalTerminal",
+            "console": "internalConsole",
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -29,6 +30,21 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "(lldb) Launch",
+            "type": "lldb",
+            "request": "launch",
+
+            // Resolved by CMake Tools:
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${command:cmake.launchTargetDirectory}",
+            "env": {
+                "PATH": "$PATH:${workspaceFolder}"
+            }
         }
+
     ]
 }
