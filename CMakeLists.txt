@@ -17,6 +17,8 @@ set(SM_ALL_AREAS
     MarjanQML
     MoveCopyCtors
     challenge/adjacent-coins
+    challenge/amazon-1
+    challenge/amazon-2
     challenge/cafe-bazaar
     challenge/cafe-bazaar-2
     challenge/codility-demo
@@ -24,6 +26,7 @@ set(SM_ALL_AREAS
     challenge/cybercom1
     challenge/cybercom2
     challenge/cybercom3
+    challenge/gameloft-2
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
     challenge/intersect-circles
