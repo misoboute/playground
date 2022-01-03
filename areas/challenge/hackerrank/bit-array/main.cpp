@@ -68,7 +68,7 @@ TEST_F(BitArrayFixture, RandT2)
 
 TEST_F(BitArrayFixture, T1)
 {
-    smop::RandomGenerator rnd;
+    RandomGenerator rnd;
     auto n = rnd.Integer(uint32_t(1), uint32_t(100000000)),
         s = rnd.Integer(uint32_t(1), uint32_t(1 << 31)),
         p = rnd.Integer(uint32_t(1), uint32_t(1 << 31)),

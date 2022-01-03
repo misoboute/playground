@@ -7,15 +7,15 @@
 #include "TypeAliases.h"
 
 inline std::ostream& operator<<(
-    std::ostream& o, smop::DateTime::duration dur)
+    std::ostream& o, DateTime::duration dur)
 {
-    auto unit = std::is_same<smop::DateTime::period, std::nano>::value ? "ns" : 
-        (std::is_same<smop::DateTime::period, std::micro>::value ? "us" : 
-        (std::is_same<smop::DateTime::period, std::milli>::value ? "ms" : ""));
+    auto unit = std::is_same<DateTime::period, std::nano>::value ? "ns" : 
+        (std::is_same<DateTime::period, std::micro>::value ? "us" : 
+        (std::is_same<DateTime::period, std::milli>::value ? "ms" : ""));
     return o << dur.count() << unit;
 }
 
-inline std::ostream& operator<<(std::ostream& o, smop::DateTime dt)
+inline std::ostream& operator<<(std::ostream& o, DateTime dt)
 {
     return o << dt.time_since_epoch() << " + epoch";
 }

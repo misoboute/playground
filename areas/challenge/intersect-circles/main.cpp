@@ -65,7 +65,7 @@ struct IntersectCirclesFixture : public Test
         return solution(10, 10, r1, 10, 10 + d, r2);
     }
 
-    smop::RandomGenerator rand_;
+    RandomGenerator rand_;
 };
 
 TEST_F(IntersectCirclesFixture, T1)

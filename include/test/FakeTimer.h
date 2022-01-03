@@ -4,32 +4,27 @@
 
 #include "TypeAliases.h"
 
-namespace smop
+class FakeClock;
+
+class FakeTimer : public ITimer
 {
+public:
+    using ClockPtr = std::shared_ptr<FakeClock>;
 
-    class FakeClock;
+    FakeTimer(const ClockPtr& clock, DateTime::duration interval);
+    ~FakeTimer();
 
-    class FakeTimer : public ITimer
-    {
-    public:
-        using ClockPtr = std::shared_ptr<FakeClock>;
+    void Start() override;
+    void Stop() override;
+    void SetTimeoutEventHandler(TimeoutHandler timoutEventHandler) override;
 
-        FakeTimer(const ClockPtr& clock, DateTime::duration interval);
-        ~FakeTimer();
+    void CheckTimeout();
 
-        void Start() override;
-        void Stop() override;
-        void SetTimeoutEventHandler(TimeoutHandler timoutEventHandler) override;
+private:
+    const ClockPtr clock_;
+    const DateTime::duration interval_;
 
-        void CheckTimeout();
-    
-    private:
-        const ClockPtr clock_;
-        const DateTime::duration interval_;
-
-        DateTime startTime_ = DateTime::min();
-        bool isRunning_ = false;
-        TimeoutHandler onTimeout_;
-    };
-
-}
+    DateTime startTime_ = DateTime::min();
+    bool isRunning_ = false;
+    TimeoutHandler onTimeout_;
+};
