@@ -54,6 +54,8 @@ public:
             }
             else
                 m_Right = child;
+            if (child->m_Parent.lock())
+                return Error::Cycles;
             child->m_Parent = shared_from_this();
             return Error::Ok;
         }
@@ -101,6 +103,7 @@ public:
             spaceBeforePair = true;
         }
         FindRootNode();
+        DetectCycles();
         SetError(Error::Ok);
     }
 
@@ -217,6 +220,33 @@ private:
         }
         if (!m_Root)
             SetError(Error::Cycles);
+    }
+
+    void DetectCycles()
+    {
+        auto nodesVisited = std::vector<bool>(m_MaxNodes, false);
+        for (auto i = 0; i < m_MaxNodes; ++i)
+        {
+            if (nodesVisited[i] || !m_Nodes[i])
+                continue;
+            auto nodesToVisit = std::vector<NodeSPtr>{ m_Nodes[i] };
+            while (!nodesToVisit.empty())
+            {
+                auto currentNode = nodesToVisit.back();
+                auto currentIndex = ValueToIndex(currentNode->GetValue());
+                if (nodesVisited[currentIndex])
+                {
+                    SetError(Error::Cycles);
+                    return;
+                }
+                nodesVisited[currentIndex] = true;
+                nodesToVisit.pop_back();
+                if (currentNode->GetLeft())
+                    nodesToVisit.push_back(currentNode->GetLeft());
+                if (currentNode->GetRight())
+                    nodesToVisit.push_back(currentNode->GetRight());
+            }
+        }
     }
 
     std::string GetNodeSExprCatchCycles(const NodeSPtr& node)
@@ -417,4 +447,9 @@ TEST_F(OptiverFixture, E1_Sample2)
 TEST_F(OptiverFixture, E4_Sample3)
 {
     EXPECT_EQ(GetSExprFromInput("(A,B) (A,C) (X,Y) (X,Z)"), "E4");
+}
+
+TEST_F(OptiverFixture, RevealedToBeFailingDuringFinalInterview)
+{
+    EXPECT_EQ(GetSExprFromInput("(D,C) (D,B) (A,F) (F,E) (E,A)"), "E5");
 }
