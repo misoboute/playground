@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 14)
-# Required for nlohmann/json at least:
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(playground)
@@ -34,6 +33,7 @@ set(SM_ALL_AREAS
     challenge/maven-2
     challenge/maven-3
     challenge/optiver
+    challenge/sequential-digits
     challenge/single-swap-sort
     challenge/tomtom-1
     challenge/tomtom-3
