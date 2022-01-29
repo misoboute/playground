@@ -15,6 +15,7 @@ set(SM_ALL_AREAS
     CodersStrikeBack
     MarjanQML
     MoveCopyCtors
+    challenge/SplitArrayLargestSum
     challenge/adjacent-coins
     challenge/amazon-1
     challenge/amazon-2
