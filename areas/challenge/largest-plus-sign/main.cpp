@@ -22,16 +22,51 @@
 // 0 <= xi, yi < n
 // All the pairs (xi, yi) are unique.
 
-
-#include <limits>
-#include <numeric>
+#include <cstdint>
+#include <set>
 #include <vector>
 
-class Solution {
+class Solution
+{
 public:
     int orderOfLargestPlusSign(int n, std::vector< std::vector<int> >& mines)
     {
+        auto mineCols = std::vector< std::set<CellIndex> >(n);
+        auto mineRows = std::vector< std::set<CellIndex> >(n);
+        for (const auto& coords : mines)
+        {
+            mineRows[coords[0]].insert(coords[1]);
+            mineCols[coords[1]].insert(coords[0]);
+        }
+        clearVector(std::move(mines));
+        
+        for (auto ord = n / 2 + n % 2; ord > 0; --ord)
+        {
+            const auto upTo = n - ord + 1;
+            for (CellIndex col = ord - 1; col < upTo; ++col)
+            {
+                for (CellIndex row = ord - 1; row < upTo; ++row)
+                {
+                    auto vertFind = mineCols[col].lower_bound(row - ord + 1);
+                    auto horizFind = mineRows[row].lower_bound(col - ord + 1);
+                    auto noVertHit = vertFind == mineCols[col].cend() || (*vertFind) >= row + ord;
+                    auto noHorizHit = horizFind == mineRows[row].cend() || (*horizFind) >= col + ord;
+                    if (noVertHit && noHorizHit)
+                    {
+                        return ord;
+                    }
+                }
+            }
+        }
         return 0;
+    }
+
+private:
+    using CellIndex = int16_t;
+
+    void clearVector(std::vector< std::vector<int> >&& mines)
+    {
+        mines.clear();
     }
 };
 
@@ -63,4 +98,22 @@ TEST_F(LargestPlusSignFixture, T2)
 {
     std::vector< std::vector<int> > mines{ { 0, 0 } };
     EXPECT_EQ(m_Sol.orderOfLargestPlusSign(1, mines), 0);
+}
+
+TEST_F(LargestPlusSignFixture, T3)
+{
+    std::vector< std::vector<int> > mines{ { 2, 4 }, { 4, 2 } };
+    EXPECT_EQ(m_Sol.orderOfLargestPlusSign(6, mines), 3);
+}
+
+TEST_F(LargestPlusSignFixture, T4)
+{
+    std::vector< std::vector<int> > mines{ { 2, 4 }, { 4, 2 } };
+    EXPECT_EQ(m_Sol.orderOfLargestPlusSign(7, mines), 4);
+}
+
+TEST_F(LargestPlusSignFixture, T5)
+{
+    std::vector< std::vector<int> > mines{ { 0, 0 }, { 0, 1 }, { 1, 0 } };
+    EXPECT_EQ(m_Sol.orderOfLargestPlusSign(2, mines), 1);
 }
