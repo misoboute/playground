@@ -19,6 +19,7 @@ set(SM_ALL_AREAS
     challenge/adjacent-coins
     challenge/amazon-1
     challenge/amazon-2
+    challenge/arithmetic-slices
     challenge/cafe-bazaar
     challenge/cafe-bazaar-2
     challenge/codility-demo
@@ -30,6 +31,7 @@ set(SM_ALL_AREAS
     challenge/hackerrank/bit-array
     challenge/hackerrank/variadics
     challenge/intersect-circles
+    challenge/largest-plus-sign
     challenge/maven-1
     challenge/maven-2
     challenge/maven-3
@@ -48,7 +50,7 @@ foreach (_area ${SM_ALL_AREAS})
     string(MAKE_C_IDENTIFIER ${_area_opt_name} _area_opt_name)
     string(TOUPPER ${_area_opt_name} _area_opt_name)
     option(${_area_opt_name} 
-        "Generate the ${_area} sub-area of the playground" OFF)
+        "Generate the ${_area} sub-area of the playground" ON)
     if (${_area_opt_name})
         add_subdirectory(areas/${_area})
     endif (${_area_opt_name})
