@@ -1,8 +1,11 @@
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-list(APPEND CMAKE_PREFIX_PATH ${SM_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64)
-find_package(Qt5 COMPONENTS Network WebChannel WebSockets Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Network WebChannel WebSockets Widgets)
+
+if (NOT Qt5_FOUND)
+    return()
+endif()
 
 include_directories(${PLAYGROUND_ROOT}/include/test)
 

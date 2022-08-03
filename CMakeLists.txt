@@ -20,9 +20,12 @@ set(SM_ALL_AREAS
     challenge/amazon-1
     challenge/amazon-2
     challenge/arithmetic-slices
+    challenge/balanced-braces
     challenge/cafe-bazaar
     challenge/cafe-bazaar-2
     challenge/codility-demo
+    challenge/compactify-wrap-string
+    challenge/compare-tree-leaves
     challenge/concept-storyboard
     challenge/cybercom1
     challenge/cybercom2
@@ -35,9 +38,15 @@ set(SM_ALL_AREAS
     challenge/maven-1
     challenge/maven-2
     challenge/maven-3
+    challenge/min-max-sum
     challenge/optiver
+    challenge/palindromic-substrings
     challenge/sequential-digits
+    challenge/sig
     challenge/single-swap-sort
+    challenge/skybox
+    challenge/time-opt-stock-transactions
+    challenge/tree-binary-search
     challenge/tomtom-1
     challenge/tomtom-3
     pedastep

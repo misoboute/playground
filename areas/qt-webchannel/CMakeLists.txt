@@ -1,7 +1,12 @@
 set(CMAKE_AUTOMOC ON)
 
-list(APPEND CMAKE_PREFIX_PATH ${SM_3RDPARTY_INSTALL_DIR}/Qt5.11.1/msvc2017_64)
-find_package(Qt5 COMPONENTS WebChannel WebEngineWidgets REQUIRED)
+include(FOBBootstrap)
+
+find_package(Qt5 COMPONENTS WebChannel)
+
+if (NOT Qt5_FOUND)
+    return()
+endif()
 
 include_directories(${PLAYGROUND_ROOT}/include/test)
 
@@ -15,6 +20,6 @@ set(SOURCES
 
 add_executable(qt-webchannel ${SOURCES})
 
-target_link_libraries(qt-webchannel Qt5::WebEngineWidgets)
+target_link_libraries(qt-webchannel Qt6::WebChannel)
 
-sm_deployqt(qt-webchannel)
+# sm_deployqt(qt-webchannel)

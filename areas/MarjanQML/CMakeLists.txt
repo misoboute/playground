@@ -7,12 +7,10 @@ set(SOURCES
     qml.qrc
 )
 
-include(SMUtil)
-
-find_package(Qt5 COMPONENTS Widgets Qml Quick REQUIRED)
+fob_find_or_build(Qt6 COMPONENTS Widgets Qml Quick REQUIRED)
 
 add_executable(MarjanQML MACOSX_BUNDLE ${SOURCES})
 
-target_link_libraries(MarjanQML Qt5::Widgets Qt5::Qml Qt5::Quick)
+target_link_libraries(MarjanQML Qt6::Widgets Qt6::Qml Qt6::Quick)
 
-sm_deployqt(MarjanQML)
+# sm_deployqt(MarjanQML)
