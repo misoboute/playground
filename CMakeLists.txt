@@ -52,7 +52,10 @@ set(SM_ALL_AREAS
     pedastep
     qt-webchannel
     qt5-webchannel-example
+    test-transactions
 )
+
+include_directories(${PLAYGROUND_ROOT}/include)
 
 foreach (_area ${SM_ALL_AREAS})
     set(_area_opt_name SM_BUILD_${_area})
